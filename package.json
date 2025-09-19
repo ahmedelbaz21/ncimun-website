@@ -2,14 +2,15 @@
   "name": "ncimun-v2",
   "version": "0.1.0",
   "private": true,
-"scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start",
-  "lint": "next lint"
-},
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
+    "autoprefixer": "^10.4.21",
     "next": "15.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0"
