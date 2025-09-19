@@ -1,22 +1,20 @@
 // app/page.tsx
 
 import Link from 'next/link';
-import Image from 'next/image'; // Import the Image component
+// The unused 'Image' import has been removed
 
 export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-12 text-center">
       
-     {/*  {/* Add the logo here *
       <div className="mb-4">
-        <Image
-          src="/ncimun 2.jpeg" // This points to the logo.png file in your 'public' folder
+        <img
+          src="/NCIMUN1.png" // Using a regular img tag is simpler here
           alt="NCIMUN Logo"
           width={150}
           height={150}
-          priority // Helps load the logo faster
         />
-      </div> */}
+      </div>
 
       <div className="mb-10">
         <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
@@ -30,7 +28,7 @@ export default function HomePage() {
       <div className="flex flex-col sm:flex-row gap-4">
         <Link
           href="/register"
-          className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-lg transition-transform hover:scale-105"
+          className="px-8 py-4 bg-ncimun-gold hover:opacity-90 text-ncimun-blue font-bold rounded-lg text-lg transition-transform hover:scale-105"
         >
           Register Now
         </Link>

@@ -11,15 +11,31 @@ export type FormState = {
   message: string | null;
 };
 
-// ... (your updatePaymentStatus function remains the same)
 export async function updatePaymentStatus(id: number, newStatus: string) {
-  // ...
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  const { error } = await supabaseAdmin
+    .from('Delegates')
+    .update({ PaymentStatus: newStatus })
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error updating payment status:', error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/admin');
+  return { success: true };
 }
 
+// Corrected the 'any' type to 'FormState'
 export async function checkStatus(
-  prevState: FormState, // Use our new type here
+  prevState: FormState,
   formData: FormData
-): Promise<FormState> { // Ensure the function returns our type
+): Promise<FormState> {
   const delegateId = formData.get('delegateId') as string;
 
   if (!delegateId) {
@@ -54,7 +70,10 @@ export async function checkStatus(
   }
 }
 
-export async function updateDelegateChoices(prevState: any, formData: FormData): Promise<FormState> {
+export async function updateDelegateChoices(
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
   const delegateId = formData.get('delegateId') as string;
   const councilId = formData.get('councilId') as string;
   const busId = formData.get('busId') as string;
@@ -68,25 +87,35 @@ export async function updateDelegateChoices(prevState: any, formData: FormData):
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // Prepare the data to update
-  const updateData: { CouncilID: number; BusID?: number } = {
+  const updateData: { CouncilID: number; BusID?: number | null } = {
     CouncilID: parseInt(councilId),
   };
-  // Only add BusID if one was selected
+  
   if (busId) {
     updateData.BusID = parseInt(busId);
+  } else {
+    updateData.BusID = null;
   }
 
-  const { error } = await supabaseAdmin
+  const { data: delegate, error: fetchError } = await supabaseAdmin
+    .from('Delegates')
+    .select('id')
+    .eq('DelegateID', delegateId)
+    .single();
+
+  if (fetchError || !delegate) {
+    return { status: 'error', message: 'Invalid Delegate ID.' };
+  }
+  
+  const { error: updateError } = await supabaseAdmin
     .from('Delegates')
     .update(updateData)
-    .eq('DelegateID', delegateId);
+    .eq('id', delegate.id);
 
-  if (error) {
-    console.error('Update choices error:', error);
-    return { status: 'error', message: 'Failed to save choices. Please try again.' };
+  if (updateError) {
+    console.error('Update choices error:', updateError);
+    return { status: 'error', message: 'Failed to save choices. A council may be full.' };
   }
 
   return { status: 'success', message: 'Your registration is complete!' };
 }
-
