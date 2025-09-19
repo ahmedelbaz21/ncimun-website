@@ -8,7 +8,7 @@ export type BusFormState = {
   error?: string;
 };
 
-// Corrected the 'any' type to 'BusFormState'
+
 export async function createBusRoute(
   prevState: BusFormState,
   formData: FormData

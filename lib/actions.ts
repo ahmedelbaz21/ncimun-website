@@ -29,7 +29,6 @@ export async function updatePaymentStatus(id: number, newStatus: string) {
   return { success: true };
 }
 
-// Corrected the 'any' type to 'FormState'
 export async function checkStatus(
   prevState: FormState,
   formData: FormData
