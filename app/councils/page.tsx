@@ -1,0 +1,40 @@
+// app/councils/page.tsx
+
+import { createClient } from '@supabase/supabase-js';
+import { BusesForm } from './Buses'; // Updated import
+
+export const revalidate = 0;
+
+async function getData() {
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  const councilsPromise = supabaseAdmin.from('Councils').select('id, CouncilName, Capacity');
+  const busesPromise = supabaseAdmin.from('Buses').select('id, RouteName');
+
+  const [{ data: councils }, { data: buses }] = await Promise.all([
+    councilsPromise,
+    busesPromise,
+  ]);
+
+  return { councils: councils || [], buses: buses || [] };
+}
+
+export default async function CouncilSelectionPage() {
+  const { councils, buses } = await getData();
+
+  return (
+    <main className="flex min-h-screen flex-col items-center p-12 md:p-24">
+      <div className="w-full max-w-lg">
+        <h1 className="text-4xl font-bold mb-8 text-center">Complete Your Registration</h1>
+        <p className="text-center text-slate-300 mb-8">
+          Your payment has been confirmed. Please enter your Delegate ID again and select your preferred council and bus route to finalize your registration.
+        </p>
+        
+        <BusesForm councils={councils} buses={buses} />
+      </div>
+    </main>
+  );
+}
