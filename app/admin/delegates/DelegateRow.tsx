@@ -1,4 +1,4 @@
-// app/admin/DelegateRow.tsx
+// app/admin/delegates/DelegateRow.tsx
 
 'use client'; // This must be a client component to be interactive
 
@@ -14,9 +14,13 @@ type Delegate = {
 };
 
 export default function DelegateRow({ delegate }: { delegate: Delegate }) {
-  // Determine the next status and button text
   const nextStatus = delegate.PaymentStatus === 'Pending' ? 'Received' : 'Pending';
   const buttonText = `Mark as ${nextStatus}`;
+
+  // This creates a new version of the action with the arguments already included.
+  const updateAction = async (formData: FormData) => {
+    await updatePaymentStatus(delegate.id, nextStatus);
+  };
 
   return (
     <tr className="border-b border-slate-700">
@@ -35,8 +39,8 @@ export default function DelegateRow({ delegate }: { delegate: Delegate }) {
         </span>
       </td>
       <td className="p-4 text-right">
-        {/* This form calls our Server Action */}
-        <form action={() => updatePaymentStatus(delegate.id, nextStatus)}>
+        {/* We now pass the pre-configured action directly */}
+        <form action={updateAction}>
           <button
             type="submit"
             className="bg-slate-600 hover:bg-slate-500 text-white font-semibold py-1 px-3 rounded text-sm transition-colors"
