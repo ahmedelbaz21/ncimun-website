@@ -25,12 +25,12 @@ export default function DelegateStatusPage() {
 
   const [state, formAction] = useActionState(checkStatus, initialState);
 
-  // Helper object to map status to a CSS class for the result message
-  const statusStyles = {
-    success: 'status-success', // Green for success
-    pending: 'status-pending', // Yellow for pending
-    error: 'status-error',     // Red for error
-    completed: 'status-completed', // Blue for completed
+  // Add an explicit type definition for the statusStyles object
+  const statusStyles: { [key: string]: string } = {
+    success: 'status-success',
+    pending: 'status-pending',
+    error: 'status-error',
+    completed: 'status-completed',
   };
 
   return (
@@ -52,14 +52,12 @@ export default function DelegateStatusPage() {
           <SubmitButton />
         </form>
 
-        {/* Display the result message from the server action */}
         {state.status && (
           <div className={`status-message ${statusStyles[state.status]}`}>
             <p>{state.message}</p>
-            {/* This link ONLY shows if the payment is received but registration is not complete */}
             {state.status === 'success' && (
               <a
-                href="/councils" // Or your /complete-registration URL
+                href="/councils"
                 className="btn btn-secondary"
               >
                 Complete Your Registration
