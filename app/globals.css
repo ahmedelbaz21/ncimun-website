@@ -1,3 +1,444 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ========= NCIMUN Global Styles ========= */
+
+/* Fonts */
+@import url('https://fonts.cdnfonts.com/css/avenir-next-cyr'); /* Avenir web-safe fallback */
+
+/* Reset & base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: 'Avenir Next Cyr', 'Avenir', sans-serif;
+  background-color: #ffffff;
+  color: #23272A;
+  line-height: 1.6;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5 {
+  font-weight: 800; /* Heavy/Black */
+  text-transform: uppercase;
+  color: #5F96CA; /* NCIMUN Blue */
+}
+
+/* Paragraphs */
+p {
+  font-weight: 400; /* Book */
+  font-size: 1rem;
+  color: #23272A;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: #5F96CA; /* NCIMUN Blue */
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #84DBD5; /* Aquamarine */
+  color: #23272A;
+}
+
+.btn-secondary {
+  background-color: #F8E98D; /* Yellow */
+  color: #23272A;
+}
+
+.btn-secondary:hover {
+  background-color: #8D94C9; /* Purple */
+  color: #fff;
+}
+
+/* Navigation */
+.navbar {
+  background-color: #23272A;
+  padding: 1rem 2rem;
+}
+
+.navbar a {
+  color: #ffffff;
+  margin-right: 1.5rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.navbar a:hover {
+  color: #84DBD5; /* Aquamarine */
+}
+
+/* Hero Section */
+.hero {
+  background-color: #5F96CA; /* NCIMUN Blue */
+  color: white;
+  text-align: center;
+  padding: 6rem 2rem;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  color: #F8E98D; /* Yellow highlight */
+}
+
+.homepage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #5F96CA, #84DBD5); /* NCIMUN Blue → Aquamarine */
+  color: #ffffff;
+}
+
+/* Fix Logo */
+.logo img {
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 2rem;
+}
+
+/* Hero text */
+.hero-text h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 1rem;
+}
+
+.hero-text h1 .highlight {
+  color: #F8E98D; /* Yellow */
+}
+
+.hero-text p {
+  font-size: 1.25rem;
+  margin-bottom: 2.5rem;
+  color: #23272A; /* Black for contrast */
+}
+
+/* Buttons */
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .hero-buttons {
+    flex-direction: row;
+  }
+}
+/* ========= Register Page ========= */
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #84DBD5, #5F96CA); /* Aquamarine → Blue */
+  color: #23272A;
+}
+
+.register-container {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.register-container h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: #5F96CA; /* NCIMUN Blue */
+}
+
+.register-container p {
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  color: #444;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.register-form label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #23272A;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.register-form input,
+.register-form select {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+.register-form input:focus,
+.register-form select:focus {
+  border-color: #5F96CA;
+  outline: none;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row label {
+  flex: 1;
+}
+/* ========= Minimalist Home Page ========= */
+.homepage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(135deg, #84DBD5, #5F96CA); /* Aquamarine → Blue */
+  color: #fff;
+  padding: 2rem;
+}
+
+.hero-center {
+  max-width: 600px;
+}
+
+.hero-logo {
+  max-width: 400px; /* bigger logo */
+  margin-bottom: 0.5rem; /* add a little more spacing */
+}
+
+
+.homepage h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
+  color: #F8E98D; /* Yellow accent */
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background 0.2s, transform 0.2s;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #F8E98D; /* Yellow */
+  color: #23272A;
+}
+
+.btn-primary:hover {
+  background: #fff;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #5F96CA; /* Black */
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background: #ffffff; /* Aquamarine */
+  color: #23272A;
+  transform: translateY(-2px);
+}
+/* ========= Status Page ========= */
+.status-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #5F96CA, #84DBD5);
+}
+
+.status-container {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.status-container h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  color: #5F96CA;
+}
+
+.status-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+}
+
+.status-form label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #23272A;
+}
+
+.status-form input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+.status-form input:focus {
+  border-color: #5F96CA;
+  outline: none;
+}
+
+.btn.full-width {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Status Messages */
+.status-message {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.status-message.success {
+  background: #d1f7d1;
+  color: #155724;
+}
+
+.status-message.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-message.error {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-message .btn {
+  margin-top: 1rem;
+}
+/* ========= Councils Page ========= */
+.councils-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #5F96CA, #84DBD5);
+}
+
+.councils-container {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.councils-container h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #5F96CA;
+}
+
+.councils-container p {
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  color: #444;
+}
+/* ========= Councils Form ========= */
+.buses-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.buses-form label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #23272A;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.buses-form input,
+.buses-form select {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.buses-form input:focus,
+.buses-form select:focus {
+  border-color: #5F96CA;
+  box-shadow: 0 0 0 3px rgba(95, 150, 202, 0.2);
+  outline: none;
+}
+
+.buses-form button {
+  margin-top: 1rem;
+}

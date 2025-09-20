@@ -1,10 +1,8 @@
-// app/status/page.tsx
-
 'use client';
 
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { checkStatus, type FormState } from '../../lib/actions'; // Import the new type
+import { checkStatus, type FormState } from '../../lib/actions';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -12,7 +10,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 disabled:bg-slate-500"
+      className="btn btn-primary full-width"
     >
       {pending ? 'Checking...' : 'Check Status'}
     </button>
@@ -20,7 +18,6 @@ function SubmitButton() {
 }
 
 export default function DelegateStatusPage() {
-  // Define the initial state with our specific type
   const initialState: FormState = {
     status: null,
     message: null,
@@ -28,42 +25,42 @@ export default function DelegateStatusPage() {
 
   const [state, formAction] = useActionState(checkStatus, initialState);
 
-  const baseClasses = 'p-4 mt-6 rounded-md text-center';
-  const styles = {
-    success: 'bg-green-200 text-green-800',
-    pending: 'bg-yellow-200 text-yellow-800',
-    error: 'bg-red-200 text-red-800',
+  // Helper object to map status to a CSS class for the result message
+  const statusStyles = {
+    success: 'status-success', // Green for success
+    pending: 'status-pending', // Yellow for pending
+    error: 'status-error',     // Red for error
+    completed: 'status-completed', // Blue for completed
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-12 md:p-24">
-      <div className="w-full max-w-md">
-        <h1 className="text-4xl font-bold mb-8 text-center">Check Your Registration Status</h1>
-        <form
-          action={formAction}
-          className="w-full bg-slate-800 p-8 rounded-lg shadow-xl"
-        >
-          <label htmlFor="delegateId" className="block text-slate-300 mb-2">
+    <main className="register-page">
+      <div className="register-container">
+        <h1>Check Your Registration Status</h1>
+        <p>Enter your Delegate ID to see your current status.</p>
+
+        <form action={formAction} className="register-form">
+          <label>
             Enter Your Delegate ID
+            <input
+              type="text"
+              name="delegateId"
+              placeholder="e.g., 2511001"
+              required
+            />
           </label>
-          <input
-            type="text"
-            id="delegateId"
-            name="delegateId"
-            className="w-full p-2 rounded bg-slate-700 text-white border border-slate-600 focus:outline-none focus:border-blue-500"
-            placeholder="e.g., 2511001"
-            required
-          />
           <SubmitButton />
         </form>
 
+        {/* Display the result message from the server action */}
         {state.status && (
-          <div className={`${baseClasses} ${styles[state.status]}`}>
+          <div className={`status-message ${statusStyles[state.status]}`}>
             <p>{state.message}</p>
+            {/* This link ONLY shows if the payment is received but registration is not complete */}
             {state.status === 'success' && (
               <a
-                href="/councils"
-                className="inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                href="/councils" // Or your /complete-registration URL
+                className="btn btn-secondary"
               >
                 Complete Your Registration
               </a>

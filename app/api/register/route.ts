@@ -8,37 +8,56 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
-    // Now, we also expect grade and week from the request
-    const { name, email, school, grade, week, phone } = await request.json(); // Added phone
+    const body = await req.json();
+    const { name, email, school, grade, week, phone } = body;
 
-    // The insert statement now includes Grade and Week
-    const { data, error } = await supabase
-      .from('Delegates')
-      .insert([
-        { 
-          Name: name, 
-          Email: email, 
-          School: school, 
-          Grade: grade, // Saving the grade
-          Week: week,    // Saving the week
-          Phone: phone   // Saving the phone number
-        }
-      ])
-      .select();
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!week) {
+      return NextResponse.json({ error: 'Week is required' }, { status: 400 });
     }
 
-    return NextResponse.json({ data }, { status: 201 });
+    // 1. Check week capacity
+    // This is a much cleaner way to find the week that starts with 'A' or 'B'
+    const { data: weekData, error: weekError } = await supabase
+      .from('weeks')
+      .select('WeekName, capacity, currentcount')
+      .ilike('WeekName', `${week}%`) // Finds the week name that STARTS WITH 'A' or 'B'
+      .single();
+
+    if (weekError || !weekData) {
+      console.error('Week find error:', weekError);
+      return NextResponse.json({ error: 'Invalid week selected' }, { status: 400 });
+    }
+
+    if (weekData.currentcount >= weekData.capacity) {
+      return NextResponse.json({ error: `Week ${week} is full` }, { status: 400 });
+    }
+
+    // 2. Insert delegate
+    const { error: insertError } = await supabase.from('Delegates').insert({
+      Name: name,
+      Email: email,
+      School: school,
+      Grade: grade,
+      Week: week,
+      Phone: phone,
+    });
+
+    if (insertError) {
+      console.error('Supabase Insert Error:', insertError.message);
+      return NextResponse.json({ error: 'Failed to register delegate.' }, { status: 500 });
+    }
+    
+    // 3. Update week count
+    await supabase
+      .from('weeks')
+      .update({ currentcount: weekData.currentcount + 1 })
+      .eq('WeekName', weekData.WeekName); // Update using the exact week name we found
+
+    return NextResponse.json({ success: true });
   } catch (err) {
-    console.error('Internal server error:', err);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('Server Error:', err);
+    return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 });
   }
 }

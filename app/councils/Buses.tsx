@@ -1,104 +1,64 @@
-// app/councils/Buses.tsx
-
 'use client';
 
-import { useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { updateDelegateChoices } from '../../lib/actions';
+import { useState } from 'react';
 
-type Council = { id: number; CouncilName: string };
-type Bus = { id: number; RouteName: string };
+export function BusesForm({ councils, buses }: { councils: any[]; buses: any[] }) {
+  const [delegateId, setDelegateId] = useState('');
+  const [council, setCouncil] = useState('');
+  const [bus, setBus] = useState('');
 
-type FormState = {
-  status: 'success' | 'error' | null;
-  message: string | null;
-};
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 disabled:bg-slate-500"
-    >
-      {pending ? 'Saving...' : 'Complete Registration'}
-    </button>
-  );
-}
-
-export function BusesForm({ councils, buses }: { councils: Council[]; buses: Bus[] }) {
-  const initialState: FormState = { status: null, message: null };
-  const [state, formAction] = useActionState(updateDelegateChoices, initialState);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert(
+      `✅ Registered!\nDelegate ID: ${delegateId}\nCouncil: ${council}\nBus Route: ${bus}`
+    );
+    // TODO: Send to backend
+  };
 
   return (
-    <form
-      action={formAction}
-      className="w-full bg-slate-800 p-8 rounded-lg shadow-xl"
-    >
-      {/* Delegate ID Input */}
-      <div className="mb-4">
-        <label htmlFor="delegateId" className="block text-slate-300 mb-2">
-          Delegate ID
-        </label>
+    <form onSubmit={handleSubmit} className="buses-form">
+      <label>
+        Delegate ID
         <input
           type="text"
-          id="delegateId"
-          name="delegateId"
-          className="w-full p-2 rounded bg-slate-700 text-white border border-slate-600 focus:outline-none focus:border-blue-500"
-          placeholder="Enter the ID you received"
+          value={delegateId}
+          onChange={(e) => setDelegateId(e.target.value)}
+          placeholder="e.g., 2511001"
           required
         />
-      </div>
+      </label>
 
-      {/* Council Dropdown */}
-      <div className="mb-4">
-        <label htmlFor="councilId" className="block text-slate-300 mb-2">
-          Select Council
-        </label>
+      <label>
+        Select Council
         <select
-          id="councilId"
-          name="councilId"
-          className="w-full p-2 rounded bg-slate-700 text-white border border-slate-600 focus:outline-none focus:border-blue-500"
+          value={council}
+          onChange={(e) => setCouncil(e.target.value)}
           required
         >
-          <option value="">Choose a council...</option>
-          {councils.map((council) => (
-            <option key={council.id} value={council.id}>
-              {council.CouncilName}
+          <option value="">-- Choose a council --</option>
+          {councils.map((c) => (
+            <option key={c.id} value={c.CouncilName}>
+              {c.CouncilName} (Capacity: {c.Capacity})
             </option>
           ))}
         </select>
-      </div>
+      </label>
 
-      {/* Bus Route Dropdown */}
-      <div className="mb-4">
-        <label htmlFor="busId" className="block text-slate-300 mb-2">
-          Select Bus Route (Optional)
-        </label>
-        <select
-          id="busId"
-          name="busId"
-          className="w-full p-2 rounded bg-slate-700 text-white border border-slate-600 focus:outline-none focus:border-blue-500"
-        >
-          <option value="">No bus needed</option>
-          {buses.map((bus) => (
-            <option key={bus.id} value={bus.id}>
-              {bus.RouteName}
+      <label>
+        Select Bus Route
+        <select value={bus} onChange={(e) => setBus(e.target.value)} required>
+          <option value="">-- Choose a bus route --</option>
+          {buses.map((b) => (
+            <option key={b.id} value={b.RouteName}>
+              {b.RouteName}
             </option>
           ))}
         </select>
-      </div>
+      </label>
 
-      <SubmitButton />
-
-      {/* Display Success or Error Messages */}
-      {state.status === 'success' && (
-        <p className="mt-4 text-center text-green-400">{state.message}</p>
-      )}
-      {state.status === 'error' && (
-        <p className="mt-4 text-center text-red-400">{state.message}</p>
-      )}
+      <button type="submit" className="btn btn-primary full-width">
+        Finalize Registration
+      </button>
     </form>
   );
 }

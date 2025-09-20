@@ -3,9 +3,9 @@
 import { createClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
 
-// Define a specific type for our form state
+// Define a specific type for our form state, including the new 'completed' status
 export type FormState = {
-  status: 'success' | 'pending' | 'error' | null;
+  status: 'success' | 'pending' | 'error' | 'completed' | null;
   message: string | null;
 };
 
@@ -44,14 +44,23 @@ export async function checkStatus(
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
+  // We now select 'CouncilID' as well to check for completion
   const { data, error } = await supabaseAdmin
     .from('Delegates')
-    .select('PaymentStatus')
+    .select('PaymentStatus, CouncilID')
     .eq('DelegateID', delegateId)
     .single();
 
   if (error || !data) {
     return { status: 'error', message: 'Delegate ID not found.' };
+  }
+
+  // If CouncilID exists, registration is complete
+  if (data.CouncilID) {
+    return {
+      status: 'completed',
+      message: 'You have already completed your registration.',
+    };
   }
 
   if (data.PaymentStatus === 'Received') {
