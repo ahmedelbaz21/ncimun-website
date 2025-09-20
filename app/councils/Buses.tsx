@@ -1,28 +1,45 @@
 'use client';
 
-import { useState } from 'react';
+import { useActionState, useEffect } from 'react';
+import { useFormStatus } from 'react-dom';
+import { updateDelegateChoices, type FormState } from '../../lib/actions';
 
-export function BusesForm({ councils, buses }: { councils: any[]; buses: any[] }) {
-  const [delegateId, setDelegateId] = useState('');
-  const [council, setCouncil] = useState('');
-  const [bus, setBus] = useState('');
+type Council = { id: number; CouncilName: string; Capacity: number; };
+type Bus = { id: number; RouteName: string };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert(
-      `✅ Registered!\nDelegate ID: ${delegateId}\nCouncil: ${council}\nBus Route: ${bus}`
-    );
-    // TODO: Send to backend
-  };
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="btn btn-primary full-width"
+    >
+      {pending ? 'Saving...' : 'Finalize Registration'}
+    </button>
+  );
+}
+
+export function BusesForm({ councils, buses }: { councils: Council[]; buses: Bus[] }) {
+  const initialState: FormState = { status: null, message: null };
+  const [state, formAction] = useActionState(updateDelegateChoices, initialState);
+
+  useEffect(() => {
+    if (state.status === 'redirect' && state.message) {
+      window.location.href = state.message;
+    }
+  }, [state]);
 
   return (
-    <form onSubmit={handleSubmit} className="buses-form">
+    <form
+      action={formAction}
+      className="buses-form"
+    >
       <label>
         Delegate ID
         <input
           type="text"
-          value={delegateId}
-          onChange={(e) => setDelegateId(e.target.value)}
+          name="delegateId"
           placeholder="e.g., 2511001"
           required
         />
@@ -30,14 +47,10 @@ export function BusesForm({ councils, buses }: { councils: any[]; buses: any[] }
 
       <label>
         Select Council
-        <select
-          value={council}
-          onChange={(e) => setCouncil(e.target.value)}
-          required
-        >
+        <select name="councilId" required>
           <option value="">-- Choose a council --</option>
           {councils.map((c) => (
-            <option key={c.id} value={c.CouncilName}>
+            <option key={c.id} value={c.id}>
               {c.CouncilName} (Capacity: {c.Capacity})
             </option>
           ))}
@@ -45,20 +58,22 @@ export function BusesForm({ councils, buses }: { councils: any[]; buses: any[] }
       </label>
 
       <label>
-        Select Bus Route
-        <select value={bus} onChange={(e) => setBus(e.target.value)} required>
-          <option value="">-- Choose a bus route --</option>
+        Select Bus Route (Optional)
+        <select name="busId">
+          <option value="">-- No bus needed --</option>
           {buses.map((b) => (
-            <option key={b.id} value={b.RouteName}>
+            <option key={b.id} value={b.id}>
               {b.RouteName}
             </option>
           ))}
         </select>
       </label>
 
-      <button type="submit" className="btn btn-primary full-width">
-        Finalize Registration
-      </button>
+      <SubmitButton />
+
+      {state.status === 'error' && (
+        <p className="status-message status-error">{state.message}</p>
+      )}
     </form>
   );
 }

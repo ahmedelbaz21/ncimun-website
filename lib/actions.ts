@@ -3,9 +3,9 @@
 import { createClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
 
-// Define a specific type for our form state, including the new 'completed' status
+// Define a specific type for our form state, including 'redirect'
 export type FormState = {
-  status: 'success' | 'pending' | 'error' | 'completed' | null;
+  status: 'success' | 'pending' | 'error' | 'completed' | 'redirect' | null;
   message: string | null;
 };
 
@@ -44,7 +44,6 @@ export async function checkStatus(
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  // We now select 'CouncilID' as well to check for completion
   const { data, error } = await supabaseAdmin
     .from('Delegates')
     .select('PaymentStatus, CouncilID')
@@ -55,7 +54,6 @@ export async function checkStatus(
     return { status: 'error', message: 'Delegate ID not found.' };
   }
 
-  // If CouncilID exists, registration is complete
   if (data.CouncilID) {
     return {
       status: 'completed',
@@ -123,5 +121,6 @@ export async function updateDelegateChoices(
     return { status: 'error', message: 'Failed to save choices. A council may be full.' };
   }
 
-  return { status: 'success', message: 'Your registration is complete!' };
+  // This is the corrected return statement for a successful update
+  return { status: 'redirect', message: '/status' };
 }

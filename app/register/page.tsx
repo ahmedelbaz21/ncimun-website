@@ -38,18 +38,16 @@ export default function RegisterPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, school, grade, week, phone }),
     });
-
-    if (response.ok) {
-      alert('Registration successful!');
-      setName('');
-      setEmail('');
-      setSchool('');
-      setGrade('');
-      setWeek('');
-      setPhone('');
-    } else {
-      alert('Registration failed.');
-    }
+      if (response.ok) {
+        alert(
+          'Registration successful!'
+        );
+        // Redirect to the homepage
+        window.location.href = '/';
+      }
+      else {
+        alert('Registration failed.');
+      }
   };
 
   // Helper function to get the simple week letter ('A' or 'B') from the full WeekName
