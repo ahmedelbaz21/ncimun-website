@@ -11,7 +11,7 @@ export default function PaymentPage({
   const params = use(searchParams);
   const delegateId = params?.id ?? 'N/A';
 
-  const dueAmount = '2500 EGP';
+  const dueAmount = '2000 EGP';
   const paymentMessage =
     'Please send the due amount to either Instapay or Telda:\n\n' +
     '📱 Instapay: 010000505097\n💳 Telda: ahmedelbaz21';
