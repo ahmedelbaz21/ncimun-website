@@ -12,11 +12,16 @@ export async function GET() {
   }
 
   try {
-    const { data, error } = await supabase.from('weeks').select('*');
+    // only select the needed fields
+    const { data, error } = await supabase
+      .from('weeks')
+      .select('id, WeekName, WeekIdentifier, capacity, currentcount');
+
     if (error) throw error;
+
     return NextResponse.json(data || []);
   } catch (err) {
-    console.error(err);
+    console.error('Weeks API error:', err);
     return NextResponse.json({ error: 'Failed to fetch weeks' }, { status: 500 });
   }
 }

@@ -1,11 +1,22 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { useState, useActionState, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
-import { updateDelegateChoices, type FormState } from '../../lib/actions';
+import { updateDelegateChoices, getDelegateInfo, type FormState } from '../../lib/actions';
 
-type Council = { id: number; CouncilName: string; Capacity: number; };
+type CouncilWeek = {
+  id: number;
+  WeekIdentifier: string;
+  Capacity: number;
+  CurrentCount: number;
+  CouncilName: string;
+};
 type Bus = { id: number; RouteName: string };
+
+type BusesFormProps = {
+  councils: CouncilWeek[];
+  buses: Bus[];
+};
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -20,26 +31,57 @@ function SubmitButton() {
   );
 }
 
-export function BusesForm({ councils, buses }: { councils: Council[]; buses: Bus[] }) {
-  const initialState: FormState = { status: null, message: null };
+export function BusesForm({ councils, buses }: BusesFormProps) {
+  const [delegateId, setDelegateId] = useState('');
+  const [filteredCouncils, setFilteredCouncils] = useState<CouncilWeek[]>([]);
+  
+  const initialState = { status: '', message: '' };
   const [state, formAction] = useActionState(updateDelegateChoices, initialState);
 
   useEffect(() => {
-    if (state.status === 'redirect' && state.message) {
-      window.location.href = state.message;
+    const filterData = async () => {
+      if (delegateId) {
+        const delegateInfo = await getDelegateInfo(delegateId);
+        if (delegateInfo) {
+          const { grade, week } = delegateInfo;
+          let weekFiltered = councils.filter(c => c.WeekIdentifier === week);
+          if (Number(grade) === 7 || Number(grade) === 8) {
+            setFilteredCouncils(
+              weekFiltered.filter(c => c.CouncilName.toLowerCase().includes('junior council'))
+            );
+          } else {
+            setFilteredCouncils(
+              weekFiltered.filter(c => !c.CouncilName.toLowerCase().includes('junior council'))
+            );
+          }
+        } else {
+          setFilteredCouncils([]);
+        }
+      } else {
+        setFilteredCouncils([]);
+      }
+    };
+    filterData();
+  }, [delegateId, councils]);
+
+  useEffect(() => {
+    if (state.status === 'success') {
+      const timer = setTimeout(() => {
+        window.location.href = '/status'; // redirect page
+      }, 2000);
+      return () => clearTimeout(timer);
     }
   }, [state]);
 
   return (
-    <form
-      action={formAction}
-      className="buses-form"
-    >
+    <form action={formAction} className="buses-form">
       <label>
         Delegate ID
         <input
           type="text"
-          name="delegateId"
+          name="DelegateID"
+          value={delegateId}
+          onChange={(e) => setDelegateId(e.target.value)}
           placeholder="e.g., 2511001"
           required
         />
@@ -47,19 +89,22 @@ export function BusesForm({ councils, buses }: { councils: Council[]; buses: Bus
 
       <label>
         Select Council
-        <select name="councilId" required>
-          <option value="">-- Choose a council --</option>
-          {councils.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.CouncilName} (Capacity: {c.Capacity})
-            </option>
-          ))}
+        <select name="CouncilWeekID" required disabled={!delegateId || filteredCouncils.length === 0}>
+          <option value="">{delegateId ? "Choose a council..." : "Enter Delegate ID first"}</option>
+          {filteredCouncils.map((c) => {
+            const isFull = c.CurrentCount >= c.Capacity;
+            return (
+              <option key={c.id} value={c.id} disabled={isFull}>
+                {c.CouncilName} {isFull ? '(Full)' : `(${c.CurrentCount}/${c.Capacity})`}
+              </option>
+            );
+          })}
         </select>
       </label>
 
       <label>
         Select Bus Route (Optional)
-        <select name="busId">
+        <select name="BusID">
           <option value="">-- No bus needed --</option>
           {buses.map((b) => (
             <option key={b.id} value={b.id}>
@@ -73,6 +118,9 @@ export function BusesForm({ councils, buses }: { councils: Council[]; buses: Bus
 
       {state.status === 'error' && (
         <p className="status-message status-error">{state.message}</p>
+      )}
+      {state.status === 'success' && (
+        <p className="status-message status-success">{state.message}</p>
       )}
     </form>
   );

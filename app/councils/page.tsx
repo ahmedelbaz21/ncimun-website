@@ -10,8 +10,15 @@ async function getData() {
   );
 
   const councilsPromise = supabaseAdmin
-    .from('Councils')
-    .select('id, CouncilName, Capacity');
+    .from('CouncilWeeks')
+    .select(`
+      id,
+      WeekIdentifier,
+      Capacity,
+      CurrentCount,
+      council:Councils (CouncilName)
+    `);
+    
   const busesPromise = supabaseAdmin
     .from('Buses')
     .select('id, RouteName');
@@ -21,7 +28,15 @@ async function getData() {
     busesPromise,
   ]);
 
-  return { councils: councils || [], buses: buses || [] };
+  const formattedCouncils = councils?.map((cw: any) => ({
+    id: cw.id,
+    WeekIdentifier: cw.WeekIdentifier,
+    Capacity: cw.Capacity,
+    CurrentCount: cw.CurrentCount,
+    CouncilName: cw.council.CouncilName
+  })) || [];
+
+  return { councils: formattedCouncils, buses: buses || [] };
 }
 
 export default async function CouncilSelectionPage() {
@@ -36,7 +51,6 @@ export default async function CouncilSelectionPage() {
           and select your preferred council and bus route to finalize your
           registration.
         </p>
-
         <BusesForm councils={councils} buses={buses} />
       </div>
     </main>

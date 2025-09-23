@@ -1,5 +1,3 @@
-// app/api/register/route.ts
-
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
@@ -11,18 +9,37 @@ const supabase = createClient(
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, school, grade, week, phone } = body;
+    const {
+      name, email, school, grade, week, phone, dietaryNotes,
+      emergencyContactName, emergencyContactRelation, emergencyContactPhone
+    } = body;
 
+    // --- Validation ---
     if (!week) {
       return NextResponse.json({ error: 'Week is required' }, { status: 400 });
     }
+    const weekLetter = week.trim(); // frontend already sends "A" / "B" / "C"
 
-    // 1. Check week capacity
-    // This is a much cleaner way to find the week that starts with 'A' or 'B'
+    // --- Check for Existing Delegate ---
+    const { data: existingDelegate } = await supabase
+      .from('Delegates')
+      .select('Email, Phone')
+      .or(`Email.eq.${email},Phone.eq.${phone}`)
+      .maybeSingle();
+
+    if (existingDelegate) {
+      const errorMessage =
+        existingDelegate.Email === email
+          ? 'This email address has already been registered.'
+          : 'This phone number has already been registered.';
+      return NextResponse.json({ error: errorMessage }, { status: 409 });
+    }
+
+    // --- Check Week Capacity ---
     const { data: weekData, error: weekError } = await supabase
       .from('weeks')
-      .select('WeekName, capacity, currentcount')
-      .ilike('WeekName', `${week}%`) // Finds the week name that STARTS WITH 'A' or 'B'
+      .select('capacity, currentcount')
+      .eq('WeekIdentifier', weekLetter)
       .single();
 
     if (weekError || !weekData) {
@@ -31,31 +48,55 @@ export async function POST(req: Request) {
     }
 
     if (weekData.currentcount >= weekData.capacity) {
-      return NextResponse.json({ error: `Week ${week} is full` }, { status: 400 });
+      return NextResponse.json({ error: `Week ${weekLetter} is full` }, { status: 400 });
     }
 
-    // 2. Insert delegate
-    const { error: insertError } = await supabase.from('Delegates').insert({
+    // --- Insert Delegate ---
+   const { data: newDelegate, error: insertError } = await supabase
+    .from('Delegates')
+    .insert({
       Name: name,
       Email: email,
       School: school,
       Grade: grade,
-      Week: week,
+      Week: week, // ✅ directly use WeekIdentifier
       Phone: phone,
-    });
+      DietaryNotes: dietaryNotes,
+    })
+    .select('*') // 👈 safer for debugging, return all columns
+    .single();
 
-    if (insertError) {
-      console.error('Supabase Insert Error:', insertError.message);
+
+    if (insertError || !newDelegate) {
+      console.error('Supabase Insert Error:', insertError?.message);
       return NextResponse.json({ error: 'Failed to register delegate.' }, { status: 500 });
     }
-    
-    // 3. Update week count
+
+    // --- Insert Emergency Contact ---
+    if (newDelegate.id) {
+      await supabase.from('EmergencyContacts').insert({
+        DelegateID: newDelegate.id,
+        Name: emergencyContactName,
+        Relation: emergencyContactRelation,
+        Phone: emergencyContactPhone,
+      });
+    }
+
+    // --- Update Week Count ---
     await supabase
       .from('weeks')
       .update({ currentcount: weekData.currentcount + 1 })
-      .eq('WeekName', weekData.WeekName); // Update using the exact week name we found
+      .eq('WeekIdentifier', weekLetter);
 
-    return NextResponse.json({ success: true });
+    // ✅ Return delegate to frontend (frontend will handle EmailJS)
+    return NextResponse.json({
+      success: true,
+      delegate: {
+        ...newDelegate,
+        Week: weekLetter,
+      },
+    });
+
   } catch (err) {
     console.error('Server Error:', err);
     return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 });

@@ -3,7 +3,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
 
-// Define a specific type for our form state, including 'redirect'
 export type FormState = {
   status: 'success' | 'pending' | 'error' | 'completed' | 'redirect' | null;
   message: string | null;
@@ -25,7 +24,7 @@ export async function updatePaymentStatus(id: number, newStatus: string) {
     return { success: false, error: error.message };
   }
 
-  revalidatePath('/admin');
+  revalidatePath('/admin/delegates');
   return { success: true };
 }
 
@@ -46,7 +45,7 @@ export async function checkStatus(
 
   const { data, error } = await supabaseAdmin
     .from('Delegates')
-    .select('PaymentStatus, CouncilID')
+    .select('PaymentStatus, CouncilWeekID')
     .eq('DelegateID', delegateId)
     .single();
 
@@ -54,7 +53,7 @@ export async function checkStatus(
     return { status: 'error', message: 'Delegate ID not found.' };
   }
 
-  if (data.CouncilID) {
+  if (data.CouncilWeekID) {
     return {
       status: 'completed',
       message: 'You have already completed your registration.',
@@ -74,53 +73,95 @@ export async function checkStatus(
   }
 }
 
-export async function updateDelegateChoices(
-  prevState: FormState,
-  formData: FormData
-): Promise<FormState> {
-  const delegateId = formData.get('delegateId') as string;
-  const councilId = formData.get('councilId') as string;
-  const busId = formData.get('busId') as string;
+export async function updateDelegateChoices(prevState: any, formData: FormData) {
+  try {
+    const delegateId = formData.get('DelegateID') as string;
+    const councilWeekId = formData.get('CouncilWeekID') as string;
+    const busId = formData.get('BusID') as string;
 
-  if (!delegateId || !councilId) {
-    return { status: 'error', message: 'Delegate ID and Council are required.' };
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    if (!delegateId || !councilWeekId) {
+      return { status: 'error', message: 'Missing required fields.' };
+    }
+
+    // 🔎 Lookup CouncilID from CouncilWeeks
+    const { data: cw, error: cwError } = await supabase
+      .from('CouncilWeeks')
+      .select('CouncilID')
+      .eq('id', Number(councilWeekId))
+      .single();
+
+    if (cwError || !cw) {
+      console.error('CouncilWeek lookup failed:', cwError);
+      return { status: 'error', message: 'Invalid council selection.' };
+    }
+
+    const councilId = cw.CouncilID;
+
+    // ✅ Update delegate
+    const { error: updateError } = await supabase
+      .from('Delegates')
+      .update({
+        CouncilWeekID: Number(councilWeekId),
+        CouncilID: Number(councilId),
+        BusID: busId ? Number(busId) : null,
+      })
+      .eq('DelegateID', delegateId);
+
+    if (updateError) {
+      console.error('Update delegate error:', updateError);
+      return { status: 'error', message: 'Failed to save your choices.' };
+    }
+
+    // ✅ Increment council count
+    const { error: countError } = await supabase.rpc('increment_council_count', {
+      councilweek_id: Number(councilWeekId),
+    });
+
+    if (countError) {
+      console.error('Council count increment error:', countError);
+      return { status: 'error', message: 'Saved, but failed to update council count.' };
+    }
+
+    if (busId) {
+      await supabase
+        .rpc('increment_bus_count', { bus_id: busId });
+    }
+
+
+    return { status: 'success', message: 'Your choices were saved successfully!' };
+  } catch (err) {
+    console.error('updateDelegateChoices crash:', err);
+    return { status: 'error', message: 'Unexpected error occurred.' };
   }
+}
+export async function deleteDelegate(id: number) {
+  // implement if needed
+}
+
+export async function getDelegateInfo(
+  delegateId: string
+): Promise<{ grade: number; week: string } | null> {
+  if (!delegateId) return null;
 
   const supabaseAdmin = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-  const updateData: { CouncilID: number; BusID?: number | null } = {
-    CouncilID: parseInt(councilId),
-  };
-  
-  if (busId) {
-    updateData.BusID = parseInt(busId);
-  } else {
-    updateData.BusID = null;
-  }
-
-  const { data: delegate, error: fetchError } = await supabaseAdmin
+  const { data, error } = await supabaseAdmin
     .from('Delegates')
-    .select('id')
+    .select('Grade, Week')
     .eq('DelegateID', delegateId)
     .single();
 
-  if (fetchError || !delegate) {
-    return { status: 'error', message: 'Invalid Delegate ID.' };
-  }
-  
-  const { error: updateError } = await supabaseAdmin
-    .from('Delegates')
-    .update(updateData)
-    .eq('id', delegate.id);
-
-  if (updateError) {
-    console.error('Update choices error:', updateError);
-    return { status: 'error', message: 'Failed to save choices. A council may be full.' };
+  if (error || !data) {
+    return null;
   }
 
-  // This is the corrected return statement for a successful update
-  return { status: 'redirect', message: '/status' };
+  return { grade: data.Grade, week: data.Week };
 }

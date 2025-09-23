@@ -1,14 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 
-// Define the structure of the data we expect from our API
 type WeekData = {
   id: number;
   capacity: number;
   currentcount: number;
   WeekName: string;
+  WeekIdentifier: string; // 👈 add this
 };
+
 
 export default function RegisterPage() {
   const [weeks, setWeeks] = useState<WeekData[]>([]);
@@ -18,41 +20,76 @@ export default function RegisterPage() {
   const [grade, setGrade] = useState('');
   const [week, setWeek] = useState('');
   const [phone, setPhone] = useState('');
+  const [emergencyContactName, setEmergencyContactName] = useState('');
+  const [emergencyContactRelation, setEmergencyContactRelation] = useState('');
+  const [emergencyContactPhone, setEmergencyContactPhone] = useState('');
+  const [dietaryNotes, setDietaryNotes] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [councilId, setCouncilId] = useState('');
 
-  // Fetch week data from our API when the page loads
+  // Fetch weeks from API
   useEffect(() => {
     fetch('/api/weeks')
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data)) {
-          setWeeks(data);
-        }
+        if (Array.isArray(data)) setWeeks(data);
       });
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
-    const response = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, school, grade, week, phone }),
-    });
-      if (response.ok) {
-        alert(
-          'Registration successful!'
-        );
-        // Redirect to the homepage
-        window.location.href = '/';
-      }
-      else {
-        alert('Registration failed.');
-      }
-  };
+    try {
+      // 1️⃣ Register delegate in backend
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          school,
+          grade,
+          week,
+          phone,
+          emergencyContactName,
+          emergencyContactRelation,
+          emergencyContactPhone,
+          dietaryNotes,
+          councilId,
+        }),
+      });
 
-  // Helper function to get the simple week letter ('A' or 'B') from the full WeekName
-  const getWeekLetter = (weekName: string) => {
-    return weekName.charAt(0);
+      if (!response.ok) {
+        const error = await response.json();
+        alert('Registration failed: ' + error.error);
+        setLoading(false);
+        return;
+      }
+
+      const result = await response.json();
+      const delegateID = result.delegate.DelegateID;
+
+      // 2️⃣ Send email via EmailJS
+      await emailjs.send(
+        'service_kenzhqm',   // replace with your EmailJS service ID
+        'template_gsy95p8',  // replace with your EmailJS template ID
+        {
+          to_name: name,
+          to_email: email,
+          week,
+          delegate_id: delegateID,
+        },
+        'pOFpzFEqKcUnzTR-h'    // replace with your EmailJS public key
+      );
+
+      // 3️⃣ Redirect to payment instructions
+      window.location.href = '/payment-instructions?id=' + delegateID;
+    } catch (err) {
+      console.error(err);
+      alert('An unexpected error occurred.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,22 +101,45 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit} className="register-form">
           <label>
             Full Name
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </label>
 
           <label>
             Email Address
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </label>
+          <h6>
+            Please make sure your email is correct, as this will be the main source of communication.
+          </h6>
 
           <label>
             Phone Number
-            <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
           </label>
 
           <label>
             School
-            <input type="text" value={school} onChange={(e) => setSchool(e.target.value)} required />
+            <input
+              type="text"
+              value={school}
+              onChange={(e) => setSchool(e.target.value)}
+              required
+            />
           </label>
 
           <div className="form-row">
@@ -97,27 +157,62 @@ export default function RegisterPage() {
 
             <label>
               Week
-              <select
-                value={week}
-                onChange={(e) => setWeek(e.target.value)}
-                required
-              >
-                <option value="">-- Choose a week --</option>
-                {weeks.map((w) => {
-                  const isFull = w.currentcount >= w.capacity;
-                  const weekLetter = getWeekLetter(w.WeekName);
-                  return (
-                    <option key={w.id} value={weekLetter} disabled={isFull}>
-                      {w.WeekName} {isFull ? '(Full)' : `(${w.currentcount}/${w.capacity})`}
-                    </option>
-                  );
-                })}
-              </select>
+           <select
+              id="week"
+              value={week}
+              onChange={(e) => setWeek(e.target.value)}
+              required
+            >
+              <option value="">-- Choose a week --</option>
+              {weeks.map((w) => (
+                <option key={w.id} value={w.WeekIdentifier}>
+                  {w.WeekName}
+                </option>
+              ))}
+            </select>
             </label>
           </div>
 
-          <button type="submit" className="btn btn-primary full-width">
-            Submit Registration
+          {/* Emergency Contact Fields */}
+          <label>
+            Emergency Contact Name
+            <input
+              type="text"
+              value={emergencyContactName}
+              onChange={(e) => setEmergencyContactName(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Relation (Kinship)
+            <input
+              type="text"
+              value={emergencyContactRelation}
+              onChange={(e) => setEmergencyContactRelation(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Emergency Contact Phone
+            <input
+              type="tel"
+              value={emergencyContactPhone}
+              onChange={(e) => setEmergencyContactPhone(e.target.value)}
+              required
+            />
+          </label>
+
+          <label>
+            Dietary Restrictions / Accommodations
+            <textarea
+              value={dietaryNotes}
+              onChange={(e) => setDietaryNotes(e.target.value)}
+              placeholder="Enter any dietary restrictions or accommodations"
+            />
+          </label>
+
+          <button type="submit" className="btn btn-primary full-width" disabled={loading}>
+            {loading ? 'Submitting...' : 'Submit Registration'}
           </button>
         </form>
       </div>

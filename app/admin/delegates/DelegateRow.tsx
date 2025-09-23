@@ -1,8 +1,6 @@
-// app/admin/delegates/DelegateRow.tsx
-
 'use client'; // This must be a client component to be interactive
 
-import { updatePaymentStatus } from '../../../lib/actions';
+import { updatePaymentStatus, deleteDelegate } from '../../../lib/actions'; // Import deleteDelegate
 
 // Define the structure of a delegate object for TypeScript
 type Delegate = {
@@ -21,6 +19,14 @@ export default function DelegateRow({ delegate }: { delegate: Delegate }) {
   const updateAction = async (formData: FormData) => {
     await updatePaymentStatus(delegate.id, nextStatus);
   };
+  
+  // New handler for the delete action
+  const handleDelete = () => {
+    // Show a confirmation dialog before deleting
+    if (window.confirm(`Are you sure you want to delete ${delegate.Name}? This action cannot be undone.`)) {
+      deleteDelegate(delegate.id);
+    }
+  };
 
   return (
     <tr className="border-b border-slate-700">
@@ -38,8 +44,8 @@ export default function DelegateRow({ delegate }: { delegate: Delegate }) {
           {delegate.PaymentStatus}
         </span>
       </td>
-      <td className="p-4 text-right">
-        {/* We now pass the pre-configured action directly */}
+      <td className="p-4 text-right flex gap-2 justify-end">
+        {/* Form for updating payment status */}
         <form action={updateAction}>
           <button
             type="submit"
@@ -48,6 +54,13 @@ export default function DelegateRow({ delegate }: { delegate: Delegate }) {
             {buttonText}
           </button>
         </form>
+        {/* Button for deleting the delegate */}
+        <button
+          onClick={handleDelete}
+          className="bg-red-600 hover:bg-red-500 text-white font-semibold py-1 px-3 rounded text-sm"
+        >
+          Delete
+        </button>
       </td>
     </tr>
   );
