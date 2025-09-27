@@ -13,7 +13,7 @@ async function getDashboardStats() {
   );
 
   // Fetch all data in parallel for performance
-  const delegatesPromise = supabaseAdmin.from('Delegates').select('Week, PaymentStatus');
+  const delegatesPromise = supabaseAdmin.from('Delegates').select('Week, PaymentStatus, Bus:BusID(RouteName)');
   const councilWeeksPromise = supabaseAdmin.from('CouncilWeeks').select('*, council:Councils(CouncilName)');
   const busesPromise = supabaseAdmin.from('Buses').select('*, delegates:Delegates(count)');
 
@@ -23,16 +23,20 @@ async function getDashboardStats() {
     { data: buses, error: busesError },
   ] = await Promise.all([delegatesPromise, councilWeeksPromise, busesPromise]);
 
-  if (delegatesError || councilsError || busesError) {
-    console.error('Error fetching dashboard stats:', delegatesError || councilsError || busesError);
-    return {
-      weekA_count: 0,
-      weekB_count: 0,
-      payments_received: 0,
-      councilWeeks: [],
-      buses: [],
-    };
-  }
+ if (delegatesError) console.error("Delegates fetch error:", JSON.stringify(delegatesError, null, 2));
+if (councilsError) console.error("CouncilWeeks fetch error:", JSON.stringify(councilsError, null, 2));
+if (busesError) console.error("Buses fetch error:", JSON.stringify(busesError, null, 2));
+
+if (delegatesError || councilsError || busesError) {
+  return {
+    weekA_count: 0,
+    weekB_count: 0,
+    payments_received: 0,
+    councilWeeks: [],
+    buses: [],
+    delegates: [],
+  };
+}
 
   // Calculate stats
   const weekA_count = delegates.filter((d) => d.Week === 'A').length;
@@ -44,7 +48,16 @@ async function getDashboardStats() {
     delegate_count: b.delegates[0]?.count || 0,
   }));
 
-  return { weekA_count, weekB_count, payments_received, councilWeeks: councilWeeks || [], buses: formattedBuses };
+return { 
+  weekA_count, 
+  weekB_count, 
+  payments_received, 
+  councilWeeks: councilWeeks || [], 
+  buses: formattedBuses,
+  delegates: delegates || []
+};
+
+
 }
 
 export default async function AdminDashboardPage() {
@@ -52,6 +65,22 @@ export default async function AdminDashboardPage() {
 
   const councilsA = stats.councilWeeks.filter(cw => cw.WeekIdentifier === 'A');
   const councilsB = stats.councilWeeks.filter(cw => cw.WeekIdentifier === 'B');
+
+  // Compute buses with counts per week
+const busesA = stats.buses.map(bus => {
+  const delegate_count = stats.delegates?.filter(
+    d => d.Bus?.RouteName.trim() === bus.RouteName?.trim() && d.Week === 'A'
+  ).length || 0;
+  return { ...bus, delegate_count };
+});
+
+const busesB = stats.buses.map(bus => {
+  const delegate_count = stats.delegates?.filter(
+    d => d.Bus?.RouteName?.trim() === bus.RouteName?.trim() && d.Week === 'B'
+  ).length || 0;
+  return { ...bus, delegate_count };
+});
+
 
   return (
     <main className="admin-dashboard">
@@ -65,10 +94,12 @@ export default async function AdminDashboardPage() {
         <div className="stat-card">
           <h3>Delegates (Week A)</h3>
           <p>{stats.weekA_count}</p>
+          
         </div>
         <div className="stat-card">
           <h3>Delegates (Week B)</h3>
           <p>{stats.weekB_count}</p>
+          
         </div>
         <div className="stat-card">
           <h3>Payments Received</h3>
@@ -78,9 +109,10 @@ export default async function AdminDashboardPage() {
 
       {/* Navigation to Management Pages */}
       <nav className="dashboard-nav">
-          <Link href="/admin/delegates" className="btn btn-primary">Manage Delegates</Link>
-          <Link href="/admin/councils" className="btn btn-secondary">Manage Councils</Link>
-          <Link href="/admin/buses" className="btn btn-secondary">Manage Buses</Link>
+          <Link href="/admin-bazisthebest/delegates" className="btn btn-primary">Manage Delegates</Link>
+          <Link href="/admin-bazisthebest/payments" className="btn btn-secondary">View Payments</Link>
+          {/*<Link href="/admin-bazisthebest/councils" className="btn btn-secondary">Manage Councils</Link>
+          <Link href="/admin-bazisthebest/buses" className="btn btn-secondary">Manage Buses</Link>*/}
       </nav>
 
       {/* Council & Bus Status */}
@@ -108,9 +140,9 @@ export default async function AdminDashboardPage() {
           </ul>
         </div>
         <div className="details-card">
-          <h3>Bus Route Status</h3>
+          <h3>Bus Status (Week A)</h3>
           <ul>
-             {stats.buses.map(bus => (
+            {busesA.map(bus => (
               <li key={bus.id}>
                 <span>{bus.RouteName}</span>
                 <span>{bus.delegate_count} / {bus.Capacity}</span>
@@ -118,6 +150,19 @@ export default async function AdminDashboardPage() {
             ))}
           </ul>
         </div>
+
+        <div className="details-card">
+          <h3>Bus Status (Week B)</h3>
+          <ul>
+            {busesB.map(bus => (
+              <li key={bus.id}>
+                <span>{bus.RouteName}</span>
+                <span>{bus.delegate_count} / {bus.Capacity}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
       </section>
     </main>
   );

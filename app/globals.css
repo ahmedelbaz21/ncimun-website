@@ -604,7 +604,186 @@ p {
 
 .details-card li span:last-child {
   font-family: monospace;
-  background-color: #374151;
+  background-color: #ffffff;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
+}
+/* ========= Admin Table ========= */
+.admin-dashboard table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Avenir Next Cyr', 'Avenir', sans-serif;
+}
+
+.admin-dashboard thead {
+  background-color: #5F96CA; /* NCIMUN Blue */
+  color: #fff;
+}
+
+.admin-dashboard thead th {
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  text-align: left;
+  border-bottom: 2px solid #84DBD5;
+}
+
+.admin-dashboard tbody tr {
+  background-color: #f9fafb;
+  transition: background 0.2s;
+}
+
+.admin-dashboard tbody tr:nth-child(even) {
+  background-color: #edf2f7; /* light gray for zebra striping */
+}
+
+.admin-dashboard tbody tr:hover {
+  background-color: #e0f2fe; /* soft blue hover */
+}
+
+.admin-dashboard tbody td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #cbd5e1; /* light gray border */
+  color: #23272A;
+}
+
+.admin-dashboard tbody td:last-child {
+  text-align: right;
+}
+
+.admin-dashboard .action-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-left: 0.25rem;
+  text-decoration: none;
+}
+
+/* Action Buttons */
+.admin-dashboard .edit-btn {
+  background-color: #F8E98D; /* yellow */
+  color: #23272A;
+}
+
+.admin-dashboard .edit-btn:hover {
+  background-color: #facc15; /* darker yellow on hover */
+}
+
+.admin-dashboard .delete-btn {
+  background-color: #EF4444; /* red */
+  color: #fff;
+}
+
+.admin-dashboard .delete-btn:hover {
+  background-color: #dc2626; /* darker red */
+}
+
+/* ========= Column Toggles ========= */
+.column-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.column-toggles label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f3f4f6; /* light gray background */
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.column-toggles label:hover {
+  background-color: #5F96CA; /* NCIMUN Blue */
+  color: #fff;
+}
+
+.column-toggles input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #F8E98D; /* Yellow */
+  cursor: pointer;
+}
+/* Payments Table Styling */
+.payments-table-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.payments-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Inter', sans-serif;
+}
+
+.payments-table thead {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.payments-table th,
+.payments-table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.payments-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background 0.3s;
+}
+
+.payments-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.payments-table tbody tr:hover {
+  background: #e0f2fe;
+}
+
+.payments-table tfoot {
+  background: #f3f4f6;
+  font-weight: bold;
+}
+
+.payments-table tfoot td {
+  border-top: 2px solid #3b82f6;
+}
+.filter-tab {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #cbd5e1; /* light gray */
+  border-radius: 9999px; /* pill shape */
+  background-color: #f1f5f9; /* light gray bg */
+  color: #334155; /* dark gray text */
+  font-size: 0.875rem; /* small text */
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-tab:hover {
+  background-color: #e2e8f0; /* slightly darker on hover */
+  border-color: #94a3b8;
+}
+
+.filter-tab.active {
+  background-color: #1e40af; /* ncimun-blue active */
+  color: white;
+  border-color: #1e40af;
 }

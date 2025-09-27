@@ -51,7 +51,7 @@ export default async function CouncilSelectionPage() {
           and select your preferred council and bus route to finalize your
           registration.
         </p>
-        <BusesForm councils={councils} buses={buses} />
+                <BusesForm councils={councils} buses={buses} />
       </div>
     </main>
   );

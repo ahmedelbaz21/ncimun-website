@@ -2,6 +2,10 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // needs admin role to read everything
+);
 
 export type FormState = {
   status: 'success' | 'pending' | 'error' | 'completed' | 'redirect' | null;
@@ -164,4 +168,16 @@ export async function getDelegateInfo(
   }
 
   return { grade: data.Grade, week: data.Week };
+}
+
+
+export async function getDelegates() {
+  const { data, error } = await supabase.from("Delegates").select("*");
+
+  if (error) {
+    console.error("Error fetching delegates:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
 }
