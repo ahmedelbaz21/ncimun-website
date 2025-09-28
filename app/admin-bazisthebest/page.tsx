@@ -37,6 +37,12 @@ if (delegatesError || councilsError || busesError) {
     delegates: [],
   };
 }
+type Bus = {
+  id: number;
+  RouteName: string;
+  Capacity?: number;
+};
+
 
   // Calculate stats
   const weekA_count = delegates.filter((d) => d.Week === 'A').length;
@@ -67,16 +73,16 @@ export default async function AdminDashboardPage() {
   const councilsB = stats.councilWeeks.filter(cw => cw.WeekIdentifier === 'B');
 
   // Compute buses with counts per week
-const busesA = stats.buses.map(bus => {
+const busesA = stats.buses.map((bus: any) => {
   const delegate_count = stats.delegates?.filter(
-    d => d.Bus?.RouteName.trim() === bus.RouteName?.trim() && d.Week === 'A'
+    d => d.Bus?.[0]?.RouteName === bus.RouteName && d.Week === 'A'
   ).length || 0;
   return { ...bus, delegate_count };
 });
 
-const busesB = stats.buses.map(bus => {
+const busesB = stats.buses.map((bus: any) => {
   const delegate_count = stats.delegates?.filter(
-    d => d.Bus?.RouteName?.trim() === bus.RouteName?.trim() && d.Week === 'B'
+    d => d.Bus?.[0]?.RouteName === bus.RouteName && d.Week === 'B'
   ).length || 0;
   return { ...bus, delegate_count };
 });
