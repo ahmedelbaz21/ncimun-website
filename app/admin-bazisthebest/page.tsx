@@ -13,7 +13,16 @@ async function getDashboardStats() {
   );
 
   // Fetch all data in parallel for performance
-  const delegatesPromise = supabaseAdmin.from('Delegates').select('Week, PaymentStatus, Bus:BusID(RouteName)');
+const delegatesPromise = supabaseAdmin
+  .from('Delegates')
+  .select(`
+    id,
+    Week,
+    PaymentStatus,
+    BusID,
+    Bus:BusID(RouteName)
+  `);
+
   const councilWeeksPromise = supabaseAdmin.from('CouncilWeeks').select('*, council:Councils(CouncilName)');
   const busesPromise = supabaseAdmin.from('Buses').select('*, delegates:Delegates(count)');
 
@@ -72,20 +81,65 @@ export default async function AdminDashboardPage() {
   const councilsA = stats.councilWeeks.filter(cw => cw.WeekIdentifier === 'A');
   const councilsB = stats.councilWeeks.filter(cw => cw.WeekIdentifier === 'B');
 
-  // Compute buses with counts per week
-const busesA = stats.buses.map((bus: any) => {
-  const delegate_count = stats.delegates?.filter(
-    d => d.Bus?.[0]?.RouteName === bus.RouteName && d.Week === 'A'
-  ).length || 0;
+
+// --- Robust buses per-week computation (paste after councilsA / councilsB) ---
+const delegates = stats.delegates ?? [];
+const buses = stats.buses ?? [];
+
+const normalize = (v: any) => String(v ?? '').toLowerCase().trim();
+
+const busesA = buses.map((bus: any) => {
+  const busId = bus.id ?? bus.ID ?? null;
+  const busRoute = normalize(bus.RouteName ?? bus.RouteName ?? bus.name);
+
+  const delegate_count = delegates.reduce((acc: number, d: any) => {
+    if (!d) return acc;
+    if (d.Week !== 'A') return acc;
+
+    // 1) Numeric FK match (most reliable)
+    if (d.BusID != null && busId != null && Number(d.BusID) === Number(busId)) {
+      return acc + 1;
+    }
+
+    // 2) Joined relation: d.Bus may be an array ([{RouteName}]) or an object
+    const delegateRouteFromRelation = normalize(d?.Bus?.[0]?.RouteName ?? d?.Bus?.RouteName);
+    if (delegateRouteFromRelation && delegateRouteFromRelation === busRoute) return acc + 1;
+
+    // 3) Fallback stored string field on delegates
+    const delegateRouteFromField = normalize(d?.BusName ?? d?.RouteName ?? d?.busName);
+    if (delegateRouteFromField && delegateRouteFromField === busRoute) return acc + 1;
+
+    return acc;
+  }, 0);
+
   return { ...bus, delegate_count };
 });
 
-const busesB = stats.buses.map((bus: any) => {
-  const delegate_count = stats.delegates?.filter(
-    d => d.Bus?.[0]?.RouteName === bus.RouteName && d.Week === 'B'
-  ).length || 0;
+const busesB = buses.map((bus: any) => {
+  const busId = bus.id ?? bus.ID ?? null;
+  const busRoute = normalize(bus.RouteName ?? bus.RouteName ?? bus.name);
+
+  const delegate_count = delegates.reduce((acc: number, d: any) => {
+    if (!d) return acc;
+    if (d.Week !== 'B') return acc;
+
+    if (d.BusID != null && busId != null && Number(d.BusID) === Number(busId)) {
+      return acc + 1;
+    }
+
+    const delegateRouteFromRelation = normalize(d?.Bus?.[0]?.RouteName ?? d?.Bus?.RouteName);
+    if (delegateRouteFromRelation && delegateRouteFromRelation === busRoute) return acc + 1;
+
+    const delegateRouteFromField = normalize(d?.BusName ?? d?.RouteName ?? d?.busName);
+    if (delegateRouteFromField && delegateRouteFromField === busRoute) return acc + 1;
+
+    return acc;
+  }, 0);
+
   return { ...bus, delegate_count };
 });
+// --- end snippet ---
+
 
 
   return (
