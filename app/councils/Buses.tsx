@@ -47,11 +47,11 @@ export function BusesForm({ councils, buses }: BusesFormProps) {
           let weekFiltered = councils.filter(c => c.WeekIdentifier === week);
           if (Number(grade) === 7 || Number(grade) === 8) {
             setFilteredCouncils(
-              weekFiltered.filter(c => c.CouncilName.toLowerCase().includes('junior council'))
+              weekFiltered.filter(c => c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)"))
             );
           } else {
             setFilteredCouncils(
-              weekFiltered.filter(c => !c.CouncilName.toLowerCase().includes('junior council'))
+              weekFiltered.filter(c => !c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)"))
             );
           }
         } else {
