@@ -33,7 +33,7 @@ export default function PaymentsPage() {
         name: row['Name'] || 'Unknown',
         delegateId: row['Delegate ID'] || 'Unknown',
         method: row['Payment method'] || 'Unknown',
-        amount: Number(row['Amount Received'] || 2000), // default 2000
+        amount: Number(row['Amount Received'] || 2250), // default 2000
       }));
 
       setPayments(mappedPayments);
