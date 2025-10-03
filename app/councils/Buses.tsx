@@ -38,31 +38,41 @@ export function BusesForm({ councils, buses }: BusesFormProps) {
   const initialState = { status: '', message: '' };
   const [state, formAction] = useActionState(updateDelegateChoices, initialState);
 
-  useEffect(() => {
-    const filterData = async () => {
-      if (delegateId) {
-        const delegateInfo = await getDelegateInfo(delegateId);
-        if (delegateInfo) {
-          const { grade, week } = delegateInfo;
-          let weekFiltered = councils.filter(c => c.WeekIdentifier === week);
-          if (Number(grade) === 7 || Number(grade) === 8) {
-            setFilteredCouncils(
-              weekFiltered.filter(c => c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)"))
-            );
-          } else {
-            setFilteredCouncils(
-              weekFiltered.filter(c => !c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)"))
-            );
-          }
+useEffect(() => {
+  const filterData = async () => {
+    if (delegateId) {
+      const delegateInfo = await getDelegateInfo(delegateId);
+      if (delegateInfo) {
+        const { grade, week } = delegateInfo;
+        let weekFiltered = councils.filter(c => c.WeekIdentifier === week);
+
+        if (Number(grade) === 7 || Number(grade) === 8) {
+          // ✅ Only include UNICEF or CIMAL
+          setFilteredCouncils(
+            weekFiltered.filter(c => 
+              c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") ||
+              c.CouncilName.toLowerCase().includes("palestinian affairs council (cimal)")
+            )
+          );
         } else {
-          setFilteredCouncils([]);
+          // ✅ Exclude both UNICEF and CIMAL
+          setFilteredCouncils(
+            weekFiltered.filter(c => 
+              !c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") &&
+              !c.CouncilName.toLowerCase().includes("palestinian affairs council (cimal)")
+            )
+          );
         }
       } else {
         setFilteredCouncils([]);
       }
-    };
-    filterData();
-  }, [delegateId, councils]);
+    } else {
+      setFilteredCouncils([]);
+    }
+  };
+  filterData();
+}, [delegateId, councils]);
+
 
   useEffect(() => {
     if (state.status === 'success') {

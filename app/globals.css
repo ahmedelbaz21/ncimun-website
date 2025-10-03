@@ -105,7 +105,7 @@ p {
   justify-content: center;
   padding: 3rem 1rem;
   text-align: center;
-  background: linear-gradient(135deg, #5F96CA, #84DBD5); /* NCIMUN Blue → Aquamarine */
+  background: linear-gradient(135deg, #5F96CA, #0b6623); /* NCIMUN Blue → Aquamarine */
   color: #ffffff;
 }
 
@@ -226,7 +226,7 @@ p {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: linear-gradient(135deg, #84DBD5, #5F96CA); /* Aquamarine → Blue */
+  background: linear-gradient(135deg, #5F96CA, #0b6623); /* Aquamarine → Blue */
   color: #fff;
   padding: 2rem;
 }
@@ -787,4 +787,3 @@ p {
   color: white;
   border-color: #1e40af;
 }
-
