@@ -50,16 +50,14 @@ useEffect(() => {
           // ✅ Only include UNICEF or CIMAL
           setFilteredCouncils(
             weekFiltered.filter(c => 
-              c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") ||
-              c.CouncilName.toLowerCase().includes("palestinian affairs council (cimal)")
+              c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") 
             )
           );
         } else {
           // ✅ Exclude both UNICEF and CIMAL
           setFilteredCouncils(
             weekFiltered.filter(c => 
-              !c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") &&
-              !c.CouncilName.toLowerCase().includes("palestinian affairs council (cimal)")
+              !c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") 
             )
           );
         }
