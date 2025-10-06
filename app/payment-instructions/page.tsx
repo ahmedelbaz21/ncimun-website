@@ -57,6 +57,14 @@ export default function PaymentPage({
           </div>
         </div>
 
+         <p className="note">
+             ⚠️ Refund Policy: In case of cancellations, NCIMUN offers a 30% refund. This is because as soon as we receive your payment, we immediately allocate 70% toward venue, logistics, and other conference expenses.
+
+
+          </p>
+
+        
+
         {/* Button */}
         <Link href="/" className="btn btn-primary mt">
           Return to Homepage
