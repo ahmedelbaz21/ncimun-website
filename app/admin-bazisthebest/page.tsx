@@ -56,6 +56,14 @@ type Bus = {
   // Calculate stats
   const weekA_count = delegates.filter((d) => d.Week === 'A').length;
   const weekB_count = delegates.filter((d) => d.Week === 'B').length;
+  const payments_received_A = delegates.filter(
+  (d) => d.Week === 'A' && d.PaymentStatus === 'Received'
+).length;
+
+const payments_received_B = delegates.filter(
+  (d) => d.Week === 'B' && d.PaymentStatus === 'Received'
+).length;
+
   const payments_received = delegates.filter((d) => d.PaymentStatus === 'Received').length;
   
   const formattedBuses = buses.map((b) => ({
@@ -66,7 +74,9 @@ type Bus = {
 return { 
   weekA_count, 
   weekB_count, 
-  payments_received, 
+  payments_received,
+  payments_received_A,
+  payments_received_B, 
   councilWeeks: councilWeeks || [], 
   buses: formattedBuses,
   delegates: delegates || []
@@ -161,6 +171,17 @@ const busesB = buses.map((bus: any) => {
           <p>{stats.weekB_count}</p>
           
         </div>
+
+          <div className="stat-card">
+            <h3>Payments Received (Week A)</h3>
+            <p>{stats.payments_received_A}</p>
+          </div>
+
+          <div className="stat-card">
+            <h3>Payments Received (Week B)</h3>
+            <p>{stats.payments_received_B}</p>
+          </div>
+
         <div className="stat-card">
           <h3>Payments Received</h3>
           <p>{stats.payments_received}</p>
