@@ -71,7 +71,7 @@ export default function RegisterPage() {
       const delegateID = result.delegate.DelegateID;
 
       // 2️⃣ Send email via EmailJS
-      await emailjs.send(
+     /*  await emailjs.send(
         'service_kenzhqm',   // replace with your EmailJS service ID
         'template_gsy95p8',  // replace with your EmailJS template ID
         {
@@ -81,7 +81,19 @@ export default function RegisterPage() {
           delegate_id: delegateID,
         },
         'pOFpzFEqKcUnzTR-h'    // replace with your EmailJS public key
-      );
+      ); */
+
+ // 2️⃣ Send email via your new backend API
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to_name: name,
+          to_email: email,
+          week,
+          delegate_id: delegateID,
+        }),
+      });
 
       // 3️⃣ Redirect to payment instructions
       window.location.href = '/payment-instructions?id=' + delegateID;
