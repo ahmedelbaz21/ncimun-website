@@ -63,7 +63,7 @@ export async function POST(req: Request) {
 
     // Send the email
     await transporter.sendMail({
-      from: `"NCIMUN" <${process.env.GMAIL_USER}>`,
+      from: process.env.GMAIL_USER,
       to: to_email,
       subject: '🎉 NCIMUN Registration Confirmation',
       html: htmlContent,
