@@ -88,8 +88,13 @@ return {
 export default async function AdminDashboardPage() {
   const stats = await getDashboardStats();
 
-  const councilsA = stats.councilWeeks.filter(cw => cw.WeekIdentifier === 'A');
-  const councilsB = stats.councilWeeks.filter(cw => cw.WeekIdentifier === 'B');
+const councilsA = stats.councilWeeks
+  .filter(cw => cw.WeekIdentifier === 'A')
+  .sort((a, b) => a.council.CouncilName.localeCompare(b.council.CouncilName));
+
+const councilsB = stats.councilWeeks
+  .filter(cw => cw.WeekIdentifier === 'B')
+  .sort((a, b) => a.council.CouncilName.localeCompare(b.council.CouncilName));
 
 
 // --- Robust buses per-week computation (paste after councilsA / councilsB) ---
