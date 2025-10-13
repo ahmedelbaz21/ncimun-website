@@ -103,7 +103,7 @@ useEffect(() => {
             const isFull = c.CurrentCount >= c.Capacity;
             return (
               <option key={c.id} value={c.id} disabled={isFull}>
-                {c.CouncilName} {isFull ? '(Full)' : `(${c.CurrentCount}/${c.Capacity})`}
+                {c.CouncilName} {isFull ? '(Full)' : ''}
               </option>
             );
           })}

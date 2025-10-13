@@ -8,6 +8,11 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
+type Bus = {
+  id: number;
+  RouteName: string;
+  Capacity?: number;
+};
 
 type EmergencyContact = {
   Name: string;
@@ -50,6 +55,7 @@ const [visibleColumns, setVisibleColumns] = useState({
     Phone: true,
     EmergencyContacts: true,
     PaymentStatus: true,
+    Actions: true,
   });
 
   const toggleColumn = (col: keyof typeof visibleColumns) => {
@@ -204,7 +210,8 @@ const [visibleColumns, setVisibleColumns] = useState({
             {visibleColumns.Phone && <th className="p-3 text-left">Phone</th>}
             {visibleColumns.EmergencyContacts && <th className="p-3 text-left">Emergency</th>}
             {visibleColumns.PaymentStatus && <th className="p-3 text-left">Payment</th>}
-            <th className="p-3 text-right">Actions</th>
+            {visibleColumns.Actions && <th className="p-3 text-right">Actions</th>}
+
           </tr>
         </thead>
 
@@ -237,10 +244,23 @@ const [visibleColumns, setVisibleColumns] = useState({
       </span>
     </td>
   )}
+ {visibleColumns.Actions && (
   <td className="p-2 flex gap-2 justify-end">
-    <button className="actions-button edit" onClick={() => handleStatusChange(d.id, "Received")}>Mark Received</button>
-    <button className="actions-button delete" onClick={() => handleStatusChange(d.id, "Pending")}>Mark Pending</button>
+    <button
+      className="actions-button edit"
+      onClick={() => handleStatusChange(d.id, "Received")}
+    >
+      Mark Received
+    </button>
+    <button
+      className="actions-button delete"
+      onClick={() => handleStatusChange(d.id, "Pending")}
+    >
+      Mark Pending
+    </button>
   </td>
+)}
+
 </tr>
 
                 ))
