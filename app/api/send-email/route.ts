@@ -1,20 +1,21 @@
-import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
+
+// Configure Brevo (Sendinblue) SMTP transporter
+const transporter = nodemailer.createTransport({
+  host: process.env.BREVO_HOST,
+  port: Number(process.env.BREVO_PORT),
+  auth: {
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_PASS,
+  },
+});
 
 export async function POST(req: Request) {
   try {
     const { to_name, to_email, week, delegate_id } = await req.json();
 
-    // Create reusable transporter using Gmail + App Password
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS,
-      },
-    });
-
-    // Your HTML email template
+    // Replace template placeholders dynamically
     const htmlContent = `
 <div style="font-family: system-ui, sans-serif, Arial; font-size: 12px;">
   <div style="margin-top: 20px; padding: 15px 0; border-width: 1px 0; border-style: dashed; border-color: lightgrey;">
@@ -32,46 +33,43 @@ export async function POST(req: Request) {
       <li><strong>Telda</strong> – ahmedelbaz21</li>
     </ul>
 
-    <p>
-      After making your payment, kindly <strong>attach the payment proof</strong> in the form linked below:<br>
+    <p>After making your payment, kindly <strong>attach the payment proof</strong> in the form linked below:<br>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSfHBXWJZCWI0IkUUI4NCZOrGO4xA8eJjoOijoR0KWnmWiY2AA/viewform?usp=header">
         Payment Confirmation Form
       </a>
     </p>
 
-    <p>⚠️ <strong>Important:</strong> Your registration will only be finalized once we have received and verified your payment proof.
-    Until then, your spot is <strong>not officially reserved</strong>.</p>
+    <p>⚠️ <strong>Important:</strong> Your registration will only be finalized once we have received and verified your payment proof. Until then, your spot is <strong>not officially reserved</strong>.</p>
 
-    <p>⚠️ <strong>Refund Policy:</strong> In case of cancellations, NCIMUN offers a <strong>30% refund</strong>.
-    This is because as soon as we receive your payment, we immediately allocate <strong>70%</strong> toward venue,
-    logistics, and other conference expenses.</p>
+    <p>⚠️ <strong>Refund Policy:</strong> In case of cancellations, NCIMUN offers a <strong>30% refund</strong>. This is because as soon as we receive your payment, we immediately allocate <strong>70%</strong> toward venue, logistics, and other conference expenses.</p>
 
     <p>We look forward to welcoming you to NCIMUN!</p>
 
-    <p>🔗 Stay connected with us on Instagram:
+    <p>🔗 Stay connected to our Instagram page for more information:
       <a href="https://www.instagram.com/ncimun_tkh?igsh=c2psdjl5djF0MzQ3">NCIMUN's Instagram</a>
     </p>
 
-    <p>For any inquiries, please contact us at:</p>
-    <p><strong>ncimun.eg@gmail.com</strong> or:</p>
-    <p>01000505097 - Ahmed Elbaz<br>01270709725 - Zeina Marwan</p>
+    <p>For any inquiries please contact us at:</p>
+    <p><strong>ncimun.eg@gmail.com</strong></p>
+    <p>01000505097 - Ahmed Elbaz</p>
+    <p>01270709725 - Zeina Marwan</p>
 
     <p>Best regards,<br><strong>The NCIMUN Team</strong></p>
   </div>
 </div>
 `;
 
-    // Send the email
+    // Send email via Brevo
     await transporter.sendMail({
-      from: process.env.GMAIL_USER,
+      from: process.env.BREVO_USER,
       to: to_email,
-      subject: '🎉 NCIMUN Registration Confirmation',
+      subject: "🎉 NCIMUN Registration Confirmation",
       html: htmlContent,
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Email send error:', error);
-    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    console.error("Email send error:", error);
+    return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
   }
 }
