@@ -46,21 +46,27 @@ useEffect(() => {
         const { grade, week } = delegateInfo;
         let weekFiltered = councils.filter(c => c.WeekIdentifier === week);
 
+        console.log("Available councils:", weekFiltered.map(c => c.CouncilName));
+
         if (Number(grade) === 7 || Number(grade) === 8) {
-          // ✅ Only include UNICEF or CIMAL
-          setFilteredCouncils(
-            weekFiltered.filter(c => 
-              c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") 
-            )
-          );
+         // ✅ Include UNICEF and HRC for juniors
+        setFilteredCouncils(
+          weekFiltered.filter(c =>
+            c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") ||
+            c.CouncilName.toLowerCase().includes("humans right council (hrc)"))
+        );
         } else {
-          // ✅ Exclude both UNICEF and CIMAL
+          // ✅ Exclude UNICEF and HRC for others
           setFilteredCouncils(
-            weekFiltered.filter(c => 
-              !c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") 
+            weekFiltered.filter(c =>
+              !(
+                c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") ||
+                c.CouncilName.toLowerCase().includes("humans right council (hrc)")
+              )
             )
           );
         }
+
       } else {
         setFilteredCouncils([]);
       }
@@ -111,15 +117,16 @@ useEffect(() => {
       </label>
 
       <label>
-        Select Bus Route (Optional)
-        <select name="BusID">
+        ⚠️ please head to the bus route page to select your bus ⚠️
+
+       {/*  <select name="BusID">
           <option value="">-- No bus needed --</option>
           {buses.map((b) => (
             <option key={b.id} value={b.id}>
               {b.RouteName}
             </option>
           ))}
-        </select>
+        </select> */}
       </label>
 
       <SubmitButton />

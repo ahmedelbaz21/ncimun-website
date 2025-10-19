@@ -18,6 +18,9 @@ export default function HomePage() {
           <Link href="/status" className="btn btn-secondary">
             Check Status / Log In
           </Link>
+           <Link href="/bus_route" className="btn btn-primary">
+            Bus Routes
+          </Link>
         </div>
       </div>
     </main>

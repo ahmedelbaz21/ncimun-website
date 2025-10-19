@@ -197,6 +197,7 @@ const busesB = buses.map((bus: any) => {
       <nav className="dashboard-nav">
           <Link href="/admin-bazisthebest/delegates" className="btn btn-primary">Manage Delegates</Link>
           <Link href="/admin-bazisthebest/payments" className="btn btn-secondary">View Payments</Link>
+          <Link href="/admin-bazisthebest/newbus" className="btn btn-primary">Bus Stats</Link>
           {/*<Link href="/admin-bazisthebest/councils" className="btn btn-secondary">Manage Councils</Link>
           <Link href="/admin-bazisthebest/buses" className="btn btn-secondary">Manage Buses</Link>*/}
       </nav>
