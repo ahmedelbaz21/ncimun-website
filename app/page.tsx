@@ -16,10 +16,10 @@ export default function HomePage() {
             Register Now
           </Link>
           <Link href="/status" className="btn btn-secondary">
-            Check Status / Log In
+            Choose Council
           </Link>
            <Link href="/bus_route" className="btn btn-primary">
-            Bus Routes
+            Choose Bus Routes
           </Link>
         </div>
       </div>
