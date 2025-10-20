@@ -162,6 +162,7 @@ const busesB = buses.map((bus: any) => {
       <header className="dashboard-header">
         <Image src="/logo.png" alt="NCIMUN Logo" width={60} height={60} />
         <h1>Admin Dashboard</h1>
+        <Image src="/heads.webp" alt="heads Logo" width={80} height={80} />
       </header>
       
       {/* Main Stats Cards */}
