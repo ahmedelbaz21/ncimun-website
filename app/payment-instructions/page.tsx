@@ -1,17 +1,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { use } from 'react';
 
 export default function PaymentPage({
   searchParams,
 }: {
-  searchParams: Promise<{ id?: string }>;
+  searchParams: { id?: string };
 }) {
-  // ✅ unwrap searchParams with use()
-  const params = use(searchParams);
-  const delegateId = params?.id ?? 'N/A';
+  const delegateId = searchParams?.id ?? 'N/A';
 
-  const dueAmount = '2250 EGP';
+  // ✅ determine due amount dynamically
+  let dueAmount = '—';
+  const fourthDigit = delegateId?.charAt(3);
+  if (fourthDigit === '1') {
+    dueAmount = '2500 EGP';
+  } else if (fourthDigit === '2') {
+    dueAmount = '2250 EGP';
+  }
+
   const paymentMessage =
     'Please send the due amount to either Instapay or Telda:\n\n' +
     '📱 Instapay: 01000505097\n💳 Telda: ahmedelbaz21';
@@ -57,13 +62,11 @@ export default function PaymentPage({
           </div>
         </div>
 
-         <p className="note">
-             ⚠️ Refund Policy: In case of cancellations, NCIMUN offers a 30% refund. This is because as soon as we receive your payment, we immediately allocate 70% toward venue, logistics, and other conference expenses.
-
-
-          </p>
-
-        
+        <p className="note">
+          ⚠️ Refund Policy: In case of cancellations, NCIMUN offers a 30% refund.
+          This is because as soon as we receive your payment, we immediately
+          allocate 70% toward venue, logistics, and other conference expenses.
+        </p>
 
         {/* Button */}
         <Link href="/" className="btn btn-primary mt">
