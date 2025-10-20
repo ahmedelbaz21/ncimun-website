@@ -1,14 +1,17 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { use } from 'react';
 
 export default function PaymentPage({
   searchParams,
 }: {
-  searchParams: { id?: string };
+  searchParams: Promise<{ id?: string }>;
 }) {
-  const delegateId = searchParams?.id ?? 'N/A';
+  // ✅ Unwrap async searchParams (Next 15 behavior)
+  const params = use(searchParams);
+  const delegateId = params?.id ?? 'N/A';
 
-  // ✅ determine due amount dynamically
+  // ✅ Dynamic due amount based on 4th digit
   let dueAmount = '—';
   const fourthDigit = delegateId?.charAt(3);
   if (fourthDigit === '1') {
@@ -24,24 +27,16 @@ export default function PaymentPage({
   return (
     <main className="payment-page">
       <div className="payment-container">
-        {/* Logo */}
         <div className="logo">
-          <Image
-            src="/logo.png"
-            alt="NCIMUN Logo"
-            width={120}
-            height={120}
-          />
+          <Image src="/logo.png" alt="NCIMUN Logo" width={120} height={120} />
         </div>
 
-        {/* Heading */}
         <h1>Registration Submitted!</h1>
         <p>
           Your application has been received. Please complete your payment to
           choose your council and bus route.
         </p>
 
-        {/* Payment Details */}
         <div className="payment-details">
           <div className="form-section">
             <h2>Your Delegate ID</h2>
@@ -68,7 +63,6 @@ export default function PaymentPage({
           allocate 70% toward venue, logistics, and other conference expenses.
         </p>
 
-        {/* Button */}
         <Link href="/" className="btn btn-primary mt">
           Return to Homepage
         </Link>
