@@ -64,7 +64,8 @@ useEffect(() => {
             weekFiltered.filter(c =>
               !(
                 c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") ||
-                c.CouncilName.toLowerCase().includes("humans right council (hrc)")
+                c.CouncilName.toLowerCase().includes("humans right council (hrc)") ||
+                c.CouncilName.toLowerCase().includes("economic and social council (ecosoc)")
               )
             )
           );
