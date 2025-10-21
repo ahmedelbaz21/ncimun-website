@@ -50,11 +50,14 @@ useEffect(() => {
 
         if (Number(grade) === 7 || Number(grade) === 8) {
          // ✅ Include UNICEF and HRC for juniors
-        setFilteredCouncils(
-          weekFiltered.filter(c =>
-            c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") ||
-            c.CouncilName.toLowerCase().includes("humans right council (hrc)"))
-        );
+      setFilteredCouncils(
+        weekFiltered.filter(c =>
+          c.CouncilName.toLowerCase().includes("united nations children's fund (unicef)") ||
+          c.CouncilName.toLowerCase().includes("humans right council (hrc)") ||
+          c.CouncilName.toLowerCase().includes("economic and social council (ecosoc)")
+        )
+      );
+
         } else {
           // ✅ Exclude UNICEF and HRC for others
           setFilteredCouncils(
