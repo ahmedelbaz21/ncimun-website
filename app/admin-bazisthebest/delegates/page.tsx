@@ -260,7 +260,6 @@ const [visibleColumns, setVisibleColumns] = useState({
     </button>
   </td>
 )}
-
 </tr>
 
                 ))

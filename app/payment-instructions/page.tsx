@@ -17,7 +17,7 @@ export default function PaymentPage({
   if (fourthDigit === '1') {
     dueAmount = '2500 EGP';
   } else if (fourthDigit === '2') {
-    dueAmount = '2250 EGP';
+    dueAmount = '2500 EGP';
   }
 
   const paymentMessage =

@@ -227,7 +227,7 @@ const busesB = buses.map((bus: any) => {
             ))}
           </ul>
         </div>
-        <div className="details-card">
+        {/* <div className="details-card">
           <h3>Bus Status (Week A)</h3>
           <ul>
             {busesA.map(bus => (
@@ -250,7 +250,7 @@ const busesB = buses.map((bus: any) => {
             ))}
           </ul>
         </div>
-
+ */}
       </section>
     </main>
   );
