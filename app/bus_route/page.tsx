@@ -220,7 +220,7 @@ export default function BusesSelectionPage() {
             </div>
 
             <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
-            <strong>Route 5: Maadi (Week A & B)</strong><br/>
+            <strong>Route 5: Maadi (Week B only )</strong><br/>
             📍 BIMS School<br/>
             🔗 <a href="https://maps.app.goo.gl/PtLtAWbaMXHF2cBT8?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:40 pm SHARP<br/>
@@ -238,7 +238,7 @@ export default function BusesSelectionPage() {
             </div>
 
             <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
-            <strong>Route 7: Uptown Int. School – Al Mokkatam (Week A only)</strong><br/>
+            <strong>Route 7: Uptown Int. School – Al Mokkatam (Week A & B)</strong><br/>
             📍 Uptown<br/>
             🔗 <a href="https://maps.app.goo.gl/yE7nqN1ucdobXrCs8?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:45 pm<br/>
@@ -291,15 +291,7 @@ export default function BusesSelectionPage() {
             🕔 Drop-off: 10:15 pm
             </div>
 
-            <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px' }}>
-            <strong>Route 13: Hotep Int. School (Week A only)</strong><br/>
-            📍  Hotep <br/>
-            🔗 <a href="https://maps.app.goo.gl/YYk6V3eFZuiUVfun6?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
-            🕓 Pick up: 2:45 pm SHARP<br/>
-            🕓 Weekend Pick up: 7:45 am SHARP<br/>
-            🕔 Drop-off: 10:15 pm
-            </div>
-
+       
 
 
         </div>
