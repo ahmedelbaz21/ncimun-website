@@ -21,6 +21,9 @@ export default function HomePage() {
            <Link href="/bus_route" className="btn btn-primary">
             Choose Bus Routes
           </Link>
+          <Link href="/Delegate-info" className="btn btn-secondary">
+            View Info
+          </Link>
         </div>
       </div>
     </main>
