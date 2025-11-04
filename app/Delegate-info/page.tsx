@@ -29,10 +29,14 @@ export default function DelegateInfoPage() {
     const isEmail = identifier.includes('@');
 
     const { data: delegateData, error: delegateError } = await supabase
-      .from('Delegates')
-      .select('*')
-      .ilike(isEmail ? 'Email' : 'DelegateID', identifier)
-      .single();
+        .from('Delegates')
+        .select(`
+            *,
+            council:Councils(CouncilName)
+        `)
+        .ilike(isEmail ? 'Email' : 'DelegateID', identifier)
+        .single();
+
 
     if (delegateError || !delegateData) {
       setMessage('❌ Delegate not found. Please check your info.');
@@ -198,7 +202,7 @@ export default function DelegateInfoPage() {
                 <strong>ID:</strong> {delegate.DelegateID}
               </p>
               <p>
-                <strong>Council:</strong> {delegate.Committee || delegate.GA || 'Not selected yet'}
+                <strong>Council:</strong> {delegate.council?.CouncilName || 'Not selected yet'}
               </p>
               <p>
                 <strong>Week:</strong> {delegate.Week}
