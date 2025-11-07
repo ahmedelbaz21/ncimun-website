@@ -18,7 +18,7 @@ type Bus = {
 };
 
 type DelegateBusSelection = {
-  delegate_id: string;
+  DelegateID: string;
   weekday_pickup_id: number;
   weekday_dropoff_id: number;
   weekend_pickup_id: number;

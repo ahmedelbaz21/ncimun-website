@@ -55,7 +55,7 @@ export default function DelegateInfoPage() {
         weekend_pickup:busroutes!weekend_pickup_id(routename),
         weekend_dropoff:busroutes!weekend_dropoff_id(routename)
       `)
-      .eq('delegate_id', delegateData.DelegateID)
+      .eq('DelegateID', delegateData.DelegateID)
       .maybeSingle();
 
     const formattedRoutes = [
