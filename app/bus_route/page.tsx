@@ -59,7 +59,7 @@ export default function BusesSelectionPage() {
       const { data: existing } = await supabase
         .from('Delegate_BusRoutes')
         .select('*')
-        .eq('delegate_id', delegateId)
+        .eq('DelegateID', delegateId)
         .maybeSingle();
 
       if (existing) {
@@ -103,7 +103,7 @@ export default function BusesSelectionPage() {
 
     const { error } = await supabase.from('Delegate_BusRoutes').insert([
       {
-        delegate_id: delegateId,
+        DelegateID: delegateId,
         ...selectedRoutes,
       },
     ]);
