@@ -205,7 +205,7 @@ const [visibleColumns, setVisibleColumns] = useState({
             {visibleColumns.School && <th className="p-3 text-left">School</th>}
             {visibleColumns.Week && <th className="p-3 text-left">Week</th>}
             {visibleColumns.CouncilName && <th className="p-3 text-left">Council</th>}
-            {visibleColumns.BusName && <th className="p-3 text-left">Bus</th>}
+            {/* {visibleColumns.BusName && <th className="p-3 text-left">Bus</th>} */}
             {visibleColumns.Email && <th className="p-3 text-left">Email</th>}
             {visibleColumns.Phone && <th className="p-3 text-left">Phone</th>}
             {visibleColumns.EmergencyContacts && <th className="p-3 text-left">Emergency</th>}
@@ -224,7 +224,7 @@ const [visibleColumns, setVisibleColumns] = useState({
                 {visibleColumns.School && <td className="p-2">{d.School}</td>}
                 {visibleColumns.Week && <td className="p-2">{d.Week}</td>}
                 {visibleColumns.CouncilName && <td className="p-2">{d.CouncilName}</td>}
-                {visibleColumns.BusName && <td className="p-2">{d.BusName}</td>}
+                {/* {visibleColumns.BusName && <td className="p-2">{d.BusName}</td>} */}
                 {visibleColumns.Email && <td className="p-2">{d.Email}</td>}
                 {visibleColumns.Phone && <td className="p-2">{d.Phone}</td>}
                 {visibleColumns.EmergencyContacts && (
