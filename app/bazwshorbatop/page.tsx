@@ -93,7 +93,7 @@ export default function WeekBAttendanceAdmin() {
               <Image src="/reg3.png" alt="Registration 3" width={80} height={80} className="rounded-lg shadow-md" />
               <Image src="/reg4.png" alt="Registration 4" width={80} height={80} className="rounded-lg shadow-md" />
             </div>
-            <h4>REG GIRLS ON TOP</h4>
+            <h4>⋅˚₊‧ 𐙚 ‧₊˚ ⋅ REG GIRLS ON TOP ⋅˚₊‧ 𐙚 ‧₊˚ ⋅</h4>
           </div>
         </div>
 
