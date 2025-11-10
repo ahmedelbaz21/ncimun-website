@@ -1,6 +1,94 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link'; // ✅ Import Link
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+export default function BusesSelectionPage() {
+  const [delegateId, setDelegateId] = useState('');
+  const [week, setWeek] = useState('');
+  const [buses, setBuses] = useState<any[]>([]);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedRoutes, setSelectedRoutes] = useState({
+    weekday_pickup_id: '',
+    weekday_dropoff_id: '',
+    weekend_pickup_id: '',
+    weekend_dropoff_id: '',
+  });
+
+  const [message, setMessage] = useState('');
+  const [showLocations, setShowLocations] = useState(false);
+
+  // 🔥 Flag to show only the failed message
+  const [failed, setFailed] = useState(true);
+
+  // Current time for message
+  const [currentTime, setCurrentTime] = useState('');
+
+  useEffect(() => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    setCurrentTime(`${hours}:${minutes}`);
+  }, []);
+
+  // Example: still run fetch logic in the background
+  useEffect(() => {
+    const fetchDelegateWeek = async () => {
+      if (!delegateId) return;
+      setLoading(true);
+
+      const { data: delegate, error } = await supabase
+        .from('Delegates')
+        .select('Week , PaymentStatus')
+        .eq('DelegateID', delegateId)
+        .single();
+
+      if (!error && delegate) {
+        setWeek(delegate.Week);
+      }
+
+      setLoading(false);
+    };
+
+    fetchDelegateWeek();
+  }, [delegateId]);
+
+  return (
+    <main
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        background: '#f8f9fa',
+        padding: '20px',
+        textAlign: 'center',
+      }}
+    >
+      <p style={{ fontSize: '1.5rem', color: 'red', fontWeight: 'bold', marginBottom: '20px' }}>
+        ❌ You have failed to register in time .
+      </p>
+
+      <nav className="dashboard-nav">
+        <Link href="/" className="btn btn-primary">
+          Back to Home Page
+        </Link>
+      </nav>
+    </main>
+  );
+}
+
+/* 'use client';
+
+import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -133,8 +221,8 @@ export default function BusesSelectionPage() {
                 >
                 View Locations Details
         </button>
-        {/* 👇 Popup card (static content) */}
-        {showLocations && (
+        {/* 👇 Popup card (static content) *}
+  /*       {showLocations && (
   <div
     style={{
       position: 'fixed',
@@ -301,8 +389,9 @@ export default function BusesSelectionPage() {
 
 
         <form onSubmit={handleSubmit} className="buses-form">
-          {/* Delegate ID */}
-          <label>
+          {/* Delegate ID *}
+      
+/*           <label>
             Delegate ID
             <input
               type="text"
@@ -314,116 +403,118 @@ export default function BusesSelectionPage() {
             />
           </label>
 
-          {/* Loading or messages */}
-          {loading && <p className="status-message">Loading...</p>}
-          {message && (
-            <p
-              className={`status-message ${
-                message.includes('successfully') ? 'status-success' : 'status-error'
-              }`}
-            >
-              {message}
-            </p>
-          )}
-
-          {/* Selection form */}
-          {!loading && week && !hasSubmitted && (
-            <>
-              <h2>Weekday Routes</h2>
-
-              <label>
-                Weekday Pick-up
-                <select
-                  required
-                  value={selectedRoutes.weekday_pickup_id}
-                  onChange={(e) =>
-                    handleSelectChange('weekday_pickup_id', e.target.value)
-                  }
-                >
-                  <option value="">Select a route...</option>
-                  {buses
-                    .filter((b) => b.daytype === 'Weekday' && b.direction === 'Pickup')
-                    .map((b) => (
-                      <option key={b.busrouteid} value={b.busrouteid}>
-                        {b.routename}
-                      </option>
-                    ))}
-                </select>
-              </label>
-
-              <label>
-                Weekday Drop-off
-                <select
-                  required
-                  value={selectedRoutes.weekday_dropoff_id}
-                  onChange={(e) =>
-                    handleSelectChange('weekday_dropoff_id', e.target.value)
-                  }
-                >
-                  <option value="">Select a route...</option>
-                  {buses
-                    .filter((b) => b.daytype === 'Weekday' && b.direction === 'Dropoff')
-                    .map((b) => (
-                      <option key={b.busrouteid} value={b.busrouteid}>
-                        {b.routename}
-                      </option>
-                    ))}
-                </select>
-              </label>
-
-              <h2>Weekend Routes</h2>
-
-              <label>
-                Weekend Pick-up
-                <select
-                  required
-                  value={selectedRoutes.weekend_pickup_id}
-                  onChange={(e) =>
-                    handleSelectChange('weekend_pickup_id', e.target.value)
-                  }
-                >
-                  <option value="">Select a route...</option>
-                  {buses
-                    .filter((b) => b.daytype === 'Weekend' && b.direction === 'Pickup')
-                    .map((b) => (
-                      <option key={b.busrouteid} value={b.busrouteid}>
-                        {b.routename}
-                      </option>
-                    ))}
-                </select>
-              </label>
-
-              <label>
-                Weekend Drop-off
-                <select
-                  required
-                  value={selectedRoutes.weekend_dropoff_id}
-                  onChange={(e) =>
-                    handleSelectChange('weekend_dropoff_id', e.target.value)
-                  }
-                >
-                  <option value="">Select a route...</option>
-                  {buses
-                    .filter((b) => b.daytype === 'Weekend' && b.direction === 'Dropoff')
-                    .map((b) => (
-                      <option key={b.busrouteid} value={b.busrouteid}>
-                        {b.routename}
-                      </option>
-                    ))}
-                </select>
-              </label>
-
-              <button
-                type="submit"
-                className="btn btn-primary full-width"
-                disabled={loading}
+          {/* Loading or messages }
+/*             {loading && <p className="status-message">Loading...</p>}
+            {message && (
+              <p
+                className={`status-message ${
+                  message.includes('successfully') ? 'status-success' : 'status-error'
+                }`}
               >
-                {loading ? 'Saving...' : 'Save Routes'}
-              </button>
-            </>
-          )}
-        </form>
-      </div>
-    </main>
-  );
-}
+                {message}
+              </p>
+            )}
+
+            {/* Selection form *}
+          /*
+            {!loading && week && !hasSubmitted && (
+              <>
+                <h2>Weekday Routes</h2>
+
+                <label>
+                  Weekday Pick-up
+                  <select
+                    required
+                    value={selectedRoutes.weekday_pickup_id}
+                    onChange={(e) =>
+                      handleSelectChange('weekday_pickup_id', e.target.value)
+                    }
+                  >
+                    <option value="">Select a route...</option>
+                    {buses
+                      .filter((b) => b.daytype === 'Weekday' && b.direction === 'Pickup')
+                      .map((b) => (
+                        <option key={b.busrouteid} value={b.busrouteid}>
+                          {b.routename}
+                        </option>
+                      ))}
+                  </select>
+                </label>
+
+                <label>
+                  Weekday Drop-off
+                  <select
+                    required
+                    value={selectedRoutes.weekday_dropoff_id}
+                    onChange={(e) =>
+                      handleSelectChange('weekday_dropoff_id', e.target.value)
+                    }
+                  >
+                    <option value="">Select a route...</option>
+                    {buses
+                      .filter((b) => b.daytype === 'Weekday' && b.direction === 'Dropoff')
+                      .map((b) => (
+                        <option key={b.busrouteid} value={b.busrouteid}>
+                          {b.routename}
+                        </option>
+                      ))}
+                  </select>
+                </label>
+
+                <h2>Weekend Routes</h2>
+
+                <label>
+                  Weekend Pick-up
+                  <select
+                    required
+                    value={selectedRoutes.weekend_pickup_id}
+                    onChange={(e) =>
+                      handleSelectChange('weekend_pickup_id', e.target.value)
+                    }
+                  >
+                    <option value="">Select a route...</option>
+                    {buses
+                      .filter((b) => b.daytype === 'Weekend' && b.direction === 'Pickup')
+                      .map((b) => (
+                        <option key={b.busrouteid} value={b.busrouteid}>
+                          {b.routename}
+                        </option>
+                      ))}
+                  </select>
+                </label>
+
+                <label>
+                  Weekend Drop-off
+                  <select
+                    required
+                    value={selectedRoutes.weekend_dropoff_id}
+                    onChange={(e) =>
+                      handleSelectChange('weekend_dropoff_id', e.target.value)
+                    }
+                  >
+                    <option value="">Select a route...</option>
+                    {buses
+                      .filter((b) => b.daytype === 'Weekend' && b.direction === 'Dropoff')
+                      .map((b) => (
+                        <option key={b.busrouteid} value={b.busrouteid}>
+                          {b.routename}
+                        </option>
+                      ))}
+                  </select>
+                </label>
+
+                <button
+                  type="submit"
+                  className="btn btn-primary full-width"
+                  disabled={loading}
+                >
+                  {loading ? 'Saving...' : 'Save Routes'}
+                </button>
+              </>
+            )}
+          </form>
+        </div>
+      </main>
+    );
+  } */
+ 
