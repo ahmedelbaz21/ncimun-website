@@ -1,4 +1,4 @@
-'use client';
+ /*  'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link'; // ✅ Import Link
@@ -61,7 +61,7 @@ export default function BusesSelectionPage() {
   }, [delegateId]);
 
   return (
-    <main
+  <main
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -84,9 +84,13 @@ export default function BusesSelectionPage() {
       </nav>
     </main>
   );
-}
+} */
 
-/* 'use client';
+
+/* -------------------------------------------------------------------------- */
+/*                             Supabase Client                                 */
+/* -------------------------------------------------------------------------- */
+ 'use client';
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
@@ -96,25 +100,29 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+/* -------------------------------------------------------------------------- */
+/*                          Main Page Component                                */
+/* -------------------------------------------------------------------------- */
 export default function BusesSelectionPage() {
-  const [delegateId, setDelegateId] = useState('');
-  const [week, setWeek] = useState('');
-  const [buses, setBuses] = useState<any[]>([]);
-  const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [selectedRoutes, setSelectedRoutes] = useState({
+  /* ------------------------------- State ---------------------------------- */
+  const [delegateId, setDelegateId] = useState('');// Delegate ID input
+  const [week, setWeek] = useState('');// Delegate's assigned week
+  const [buses, setBuses] = useState<any[]>([]);// Available bus routes
+  const [hasSubmitted, setHasSubmitted] = useState(false);// Submission status
+  const [loading, setLoading] = useState(false); // Loading state
+  const [selectedRoutes, setSelectedRoutes] = useState({ // Selected bus routes
     weekday_pickup_id: '',
     weekday_dropoff_id: '',
     weekend_pickup_id: '',
     weekend_dropoff_id: '',
   });
-
+  // Status message
   const [message, setMessage] = useState('');
-
+  // bus list Popup visibility state
   const [showLocations, setShowLocations] = useState(false);
 
 
-  // ✅ Fetch delegate info
+  // Fetch delegate info
   useEffect(() => {
     const fetchDelegateWeek = async () => {
       if (!delegateId) return;
@@ -125,7 +133,7 @@ export default function BusesSelectionPage() {
         .select('Week , PaymentStatus')
         .eq('DelegateID', delegateId)
         .single();
-
+      // delegate not found
       if (error || !delegate) {
         setMessage('Delegate not found. Please check your ID.');
         setWeek('');
@@ -133,7 +141,7 @@ export default function BusesSelectionPage() {
         setLoading(false);
         return;
       }
-
+      // Payment not received
             if (delegate.PaymentStatus !== 'Received') {
         setMessage('⚠️ Your payment must be marked as Received before selecting buses.');
         setWeek('');
@@ -165,7 +173,9 @@ export default function BusesSelectionPage() {
     fetchDelegateWeek();
   }, [delegateId]);
 
-  // ✅ Fetch buses for the delegate's week
+   /* -------------------------------------------------------------------------- */
+  /*                    Fetch Available Bus Routes (By Week)                    */
+  /* -------------------------------------------------------------------------- */
   useEffect(() => {
     const fetchBuses = async () => {
       if (!week) return;
@@ -181,10 +191,17 @@ export default function BusesSelectionPage() {
     fetchBuses();
   }, [week]);
 
+
+  /* -------------------------------------------------------------------------- */
+  /*                         Handlers & Utilities                                */
+  /* -------------------------------------------------------------------------- */
+
+  // Handle selection changes
   const handleSelectChange = (field: string, value: string) => {
     setSelectedRoutes(prev => ({ ...prev, [field]: value }));
   };
 
+  // submits the selected routes
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
@@ -205,6 +222,12 @@ export default function BusesSelectionPage() {
     setLoading(false);
   };
 
+  
+  /* -------------------------------------------------------------------------- */
+  /*                                UI Layout                                   */
+  /* -------------------------------------------------------------------------- */
+
+
   return (
     <main className="councils-page">
       <div className="councils-container">
@@ -221,49 +244,51 @@ export default function BusesSelectionPage() {
                 >
                 View Locations Details
         </button>
-        {/* 👇 Popup card (static content) *}
-  /*       {showLocations && (
-  <div
-    style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      background: 'rgba(0,0,0,0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-    }}
-  >
-    <div
-      style={{
-        background: '#fff',
-        borderRadius: '12px',
-        padding: '20px',
-        width: '90%',
-        maxWidth: '600px',
-        maxHeight: '80vh',
-        overflowY: 'auto',
-        position: 'relative',
-        boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
-      }}
-    >
-      <button
-        onClick={() => setShowLocations(false)}
-        style={{
-          position: 'absolute',
-          top: '10px',
-          right: '15px',
-          border: 'none',
-          background: 'none',
-          fontSize: '22px',
-          cursor: 'pointer',
-        }}
-      >
-        ✖
-      </button>
+        { /* ---------------------------------------------------------------------- */
+          /*                          Locations Popup Modal                         */
+          /* ---------------------------------------------------------------------- */}
+       {showLocations && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              background: '#fff',
+              borderRadius: '12px',
+              padding: '20px',
+              width: '90%',
+              maxWidth: '600px',
+              maxHeight: '80vh',
+              overflowY: 'auto',
+              position: 'relative',
+              boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
+            }}
+          >
+            <button
+              onClick={() => setShowLocations(false)}
+              style={{
+                position: 'absolute',
+                top: '10px',
+                right: '15px',
+                border: 'none',
+                background: 'none',
+                fontSize: '22px',
+                cursor: 'pointer',
+              }}
+            >
+              ✖
+            </button>
 
       <h2 style={{ textAlign: 'center', marginBottom: '15px' }}>
         🚌 BUS ROUTE LOCATIONS & TIMINGS
@@ -378,20 +403,19 @@ export default function BusesSelectionPage() {
             🕓 Weekend Pick up: 7:45 am SHARP<br/>
             🕔 Drop-off: 10:15 pm
             </div>
-
-       
-
-
+            
         </div>
         </div>
     </div>
     )}
 
-
+        { /* ---------------------------------------------------------------------- */
+          /*                              Selection Form                            */
+          /* ---------------------------------------------------------------------- */ }
         <form onSubmit={handleSubmit} className="buses-form">
-          {/* Delegate ID *}
+          {/* Delegate ID */}
       
-/*           <label>
+       <label>
             Delegate ID
             <input
               type="text"
@@ -403,8 +427,8 @@ export default function BusesSelectionPage() {
             />
           </label>
 
-          {/* Loading or messages }
-/*             {loading && <p className="status-message">Loading...</p>}
+          {/* Loading or messages */ }
+             {loading && <p className="status-message">Loading...</p>}
             {message && (
               <p
                 className={`status-message ${
@@ -415,8 +439,8 @@ export default function BusesSelectionPage() {
               </p>
             )}
 
-            {/* Selection form *}
-          /*
+            {/* Selection form */}
+          
             {!loading && week && !hasSubmitted && (
               <>
                 <h2>Weekday Routes</h2>
@@ -516,5 +540,5 @@ export default function BusesSelectionPage() {
         </div>
       </main>
     );
-  } */
+  } 
  

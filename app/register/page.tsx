@@ -50,7 +50,7 @@ export default function RegisterPage() {
           email,
           school,
           grade,
-          week,
+          week : 'C',
           phone,
           emergencyContactName,
           emergencyContactRelation,
@@ -166,10 +166,18 @@ export default function RegisterPage() {
                 required
               />
             </label>
-
+        
             <label>
               Week
-           <select
+               <input
+                  type="text"
+                  value="1-7 February"
+                  readOnly
+                  className="bg-gray-100 border rounded px-2 py-1"
+                />
+                {/* Hidden input to actually send 'C' to the backend */}
+                <input type="hidden" value="C" name="week" />
+            {/*<select
               id="week"
               value={week}
               onChange={(e) => setWeek(e.target.value)}
@@ -181,7 +189,7 @@ export default function RegisterPage() {
                   {w.WeekName}
                 </option>
               ))}
-            </select>
+            </select> */}
             </label>
           </div>
 
