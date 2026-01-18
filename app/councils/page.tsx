@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { BusesForm } from './Buses';
-
+import { BusesForm } from './CouncilSelection';
 export const revalidate = 0;
 
 async function getData() {
