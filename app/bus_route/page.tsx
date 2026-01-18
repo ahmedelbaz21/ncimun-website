@@ -297,7 +297,7 @@ export default function BusesSelectionPage() {
 
       <div style={{ textAlign: 'left' }}>
             <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
-            <strong>Route 1: 6th of October – Zayed (Week A only) </strong><br/>
+            <strong>6th of October – Zayed </strong><br/>
             📍 Cleopatra Ceramic – Mehwar July 26<br/>
             🔗 <a href="https://maps.app.goo.gl/Hkc3S1n2xfn2jXBg9?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:30 pm SHARP<br/>
@@ -306,7 +306,7 @@ export default function BusesSelectionPage() {
             </div>
 
             <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
-            <strong>Route 2: Heliopolis – Nasr City (Week A & B)</strong><br/>
+            <strong>Heliopolis – Nasr City</strong><br/>
             📍 Emirates Embassy<br/>
             🔗 <a href="https://maps.app.goo.gl/SUnnT4Q3asoDozk5A?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:45 pm SHARP<br/>
@@ -315,7 +315,7 @@ export default function BusesSelectionPage() {
             </div>
 
             <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
-            <strong>Route 3: New Cairo (Week A & B)</strong><br/>
+            <strong>New Cairo </strong><br/>
             📍 Waterway, Seoudi Supermarket<br/>
             🔗 <a href="https://maps.app.goo.gl/xnBb9wPATLU4ELb77?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 3:00 pm SHARP<br/>
@@ -324,7 +324,7 @@ export default function BusesSelectionPage() {
             </div>
 
             <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
-            <strong>Route 4: Madinaty – Shorouk (Week A & B)</strong><br/>
+            <strong>Madinaty – Shorouk </strong><br/>
             📍 Gate 1 Madinaty<br/>
             🔗 <a href="https://maps.app.goo.gl/RNSDoKZMMLZTzYcH8?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 3:15 pm SHARP<br/>
@@ -332,16 +332,16 @@ export default function BusesSelectionPage() {
             🕔 Drop-off: 9:45 pm
             </div>
 
-            <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
+            {/* <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
             <strong>Route 5: Maadi (Week B only )</strong><br/>
             📍 BIMS School<br/>
             🔗 <a href="https://maps.app.goo.gl/PtLtAWbaMXHF2cBT8?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:40 pm SHARP<br/>
             🕓 Weekend Pick up: 7:40 am SHARP<br/>
             🕔 Drop-off: 10:15 pm
-            </div>
+            </div> */}
 
-            <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
+            {/* <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
             <strong>Route 6: Seven Pillars New Capital (Week A only)</strong><br/>
             📍 Seven Pillars<br/>
             🔗 <a href="https://maps.app.goo.gl/c7tjzgJ112WvCVkj9?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
@@ -349,18 +349,18 @@ export default function BusesSelectionPage() {
             🕓 Weekend Pick up: 8:30 am SHARP<br/>
             🕔 Drop-off: 9:30 pm
             </div>
-
-            <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
+ */}
+            {/* <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
             <strong>Route 7: Uptown Int. School – Al Mokkatam (Week A & B)</strong><br/>
             📍 Uptown<br/>
             🔗 <a href="https://maps.app.goo.gl/yE7nqN1ucdobXrCs8?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:45 pm<br/>
             🕓 Weekend Pick up: 7:40 am SHARP<br/>
             🕔 Drop-off: 10:15 pm
-            </div>
+            </div> */}
 
             <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
-            <strong>Route 8: Windrose – Maadi (Week A & B)</strong><br/>
+            <strong> Windrose – Maadi </strong><br/>
             📍 Windrose<br/>
             🔗 <a href="https://maps.app.goo.gl/w9CHHoDHMT86NysF6?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:45 pm SHARP<br/>
@@ -368,26 +368,26 @@ export default function BusesSelectionPage() {
             🕔 Drop-off: 10:00 pm
             </div>
 
-            <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
+            {/* <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
             <strong>Route 9: Gateway – New Cairo (Week A only)</strong><br/>
             📍 Gateway<br/>
             🔗 <a href="https://maps.app.goo.gl/WEqoiJAjzcjbW8aa6?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:45 pm SHARP<br/>
             🕓 Weekend Pick up: 7:45 am SHARP<br/>
             🕔 Drop-off: 10:00 pm
-            </div>
+            </div> */}
 
-            <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
+            {/* <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
             <strong>Route 10: NIS Nasr city (Week B only)</strong><br/>
             📍  NIS Campus<br/>
             🔗 <a href="https://maps.app.goo.gl/dbeZc6x4TmFtaKva8?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:45 pm SHARP<br/>
             🕓 Weekend Pick up: 7:45 am SHARP<br/>
             🕔 Drop-off: 10:15 pm
-            </div>
+            </div> */}
 
             <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
-            <strong>Route 11: Continental School of Cairo – Obour (Week B only)</strong><br/>
+            <strong> Continental School of Cairo – Obour </strong><br/>
             📍  Continental School – Obour<br/>
             🔗 <a href="https://maps.app.goo.gl/hgXpavbziRpLcDpv6?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:45 pm SHARP<br/>
@@ -395,14 +395,14 @@ export default function BusesSelectionPage() {
             🕔 Drop-off: 10:15 pm
             </div>
 
-            <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
+            {/* <div style={{ background: '#f7f9fc', padding: '10px', borderRadius: '8px', marginBottom: '10px' }}>
             <strong>Route 12: Manaret Heliopolis (Week A only)</strong><br/>
             📍  Manaret Heliopolis<br/>
             🔗 <a href="https://maps.app.goo.gl/BDjGmu9KfDz5ipUi7?g_st=ipc" target="_blank" style={{ color:'#007bff' }}>View on Map</a><br/>
             🕓 Pick up: 2:45 pm SHARP<br/>
             🕓 Weekend Pick up: 7:45 am SHARP<br/>
             🕔 Drop-off: 10:15 pm
-            </div>
+            </div> */}
             
         </div>
         </div>
