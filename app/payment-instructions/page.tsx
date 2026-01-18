@@ -11,14 +11,15 @@ export default function PaymentPage({
   const params = use(searchParams);
   const delegateId = params?.id ?? 'N/A';
 
-  // ✅ Dynamic due amount based on 4th digit
+/*   // ✅ Dynamic due amount based on 4th digit
   let dueAmount = '—';
   const fourthDigit = delegateId?.charAt(3);
   if (fourthDigit === '1') {
     dueAmount = '2500 EGP';
   } else if (fourthDigit === '2') {
     dueAmount = '2500 EGP';
-  }
+  } */
+  const dueAmount = '3000 EGP';
 
   const paymentMessage =
     'Please send the due amount to either Instapay or Telda:\n\n' +

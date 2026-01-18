@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 
+
 type WeekData = {
   id: number;
   capacity: number;
@@ -103,6 +104,9 @@ export default function RegisterPage() {
       setLoading(false);
     }
   };
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+
 
   return (
     <main className="register-page">
@@ -120,6 +124,10 @@ export default function RegisterPage() {
               required
             />
           </label>
+           <h6>
+            As it will appear on your certificate.
+          </h6>
+
 
           <label>
             Email Address
@@ -231,6 +239,86 @@ export default function RegisterPage() {
             />
           </label>
 
+          <div className="terms-section mb-4">
+         <label className="flex items-center gap-2">
+  <input
+    type="checkbox"
+    checked={acceptedTerms}
+    onChange={(e) => setAcceptedTerms(e.target.checked)}
+    required
+  />
+  <span>
+    I have read & agreed to the{' '}
+    <span
+      className="text-blue-600 underline cursor-pointer"
+      onClick={() => setShowTermsModal(true)}
+    >
+      Terms & Conditions
+    </span>
+  </span>
+</label>
+
+          {showTermsModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+              <div className="bg-white rounded-lg p-6 max-w-lg w-full shadow-lg relative">
+                <h2 className="text-xl font-bold mb-4">Terms & Conditions</h2>
+                <div className="overflow-y-auto max-h-96">
+                      <p>By registering for and attending the Conference, you agree to the following terms and conditions:</p>
+
+                      <h2>1. Registration and Payment</h2>
+                      <ul>
+                        <li>All delegates must complete the registration process and pay the applicable fees to attend the Conference.</li>
+                        <li>By completing registration, you agree to these Terms and Conditions.</li>
+                      </ul>
+
+                      <h2>2. Refund Policy</h2>
+                      <ul>
+                        <li>Refunds are available only up to <strong>30% of the registration fee</strong>.</li>
+                        <li>Exceptions to this policy are made for <strong>medical reasons</strong>, upon presentation of valid documentation.</li>
+                        <li>All refund requests must be submitted in writing to <strong>[contact email]</strong> and are subject to approval.</li>
+                      </ul>
+
+                      <h2>3. Prohibited Items</h2>
+                      <p>For the safety and comfort of all attendees, the following items are strictly <strong>prohibited</strong> on the university campus:</p>
+                      <ul>
+                        <li>Nicotine products (vapes, IQOS, etc.)</li>
+                        <li>Sharp objects (compass, scissors, nail files, metal rulers, etc.)</li>
+                        <li>Energy drinks</li>
+                        <li>Speakers or any unauthorized audio devices</li>
+                      </ul>
+                      <p><em>Any prohibited items found will be confiscated, and the delegate may not get them back.</em></p>
+
+                      <h2>4. Behavior and Conduct</h2>
+                      <ul>
+                        <li>Delegates are expected to behave respectfully towards the <strong>team, other delegates, and the campus</strong>.</li>
+                        <li>Unacceptable behavior includes, but is not limited to, <strong>harassment, threats, abuse, or disruption</strong> of Conference activities.</li>
+                        <li>The Conference organizers reserve the right to <strong>remove any delegate showing unacceptable behavior</strong> and <strong>deny attendance to the remainder of the Conference without refund</strong>.</li>
+                      </ul>
+
+                      {/* <h2>5. Liability</h2>
+                      <ul>
+                        <li><strong>NCIMUN</strong> is not responsible for any personal belongings <strong>lost, stolen, or damaged</strong> during the Conference.</li>
+                        <li>Delegates participate at their own risk and are expected to follow all <strong>safety instructions</strong> provided by the Conference staff.</li>
+                      </ul> */}
+
+                      <h2>6. Changes to Terms</h2>
+                      <ul>
+                        <li><strong>NCIMUN</strong> reserves the right to <strong>modify these Terms and Conditions at any time</strong>.</li>
+                        <li>Updated terms will be communicated to delegates through <strong>official channels</strong>.</li>
+                      </ul>
+
+                      <p>By completing registration, you confirm that you have <strong>read, understood, and agreed</strong> to these Terms and Conditions.</p>
+                </div>
+                <button
+                  className="mt-4 btn btn-primary"
+                  onClick={() => setShowTermsModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+            )}
+          </div>
           <button type="submit" className="btn btn-primary full-width" disabled={loading}>
             {loading ? 'Submitting...' : 'Submit Registration'}
           </button>

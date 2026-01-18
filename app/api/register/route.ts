@@ -71,8 +71,10 @@ export async function POST(req: Request) {
 
 
     if (insertError || !newDelegate) {
-      console.error('Supabase Insert Error:', insertError?.message);
-      return NextResponse.json({ error: 'Failed to register delegate.' }, { status: 500 });
+      console.error('Supabase Insert Error FULL:', insertError); // <- full error object
+      return NextResponse.json({ 
+        error: `Failed to register delegate. DB error: ${insertError?.message}` 
+      }, { status: 500 });
     }
 
     // --- Insert Emergency Contact ---
