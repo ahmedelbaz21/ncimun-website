@@ -8,6 +8,7 @@ const supabase = createClient(
 
 export async function POST(req: Request) {
   try {
+    
     const body = await req.json();
     const {
       name, email, school, grade, week, phone, dietaryNotes,
@@ -15,12 +16,14 @@ export async function POST(req: Request) {
     } = body;
 
     // --- Validation ---
-    if (!week) {
+    /* if (!week) {
       return NextResponse.json({ error: 'Week is required' }, { status: 400 });
     }
     const weekLetter = week.trim(); // frontend already sends "A" / "B" / "C"
-
+ */
     // --- Check for Existing Delegate ---
+    const weekLetter = 'C'; // always Week C
+
     const { data: existingDelegate } = await supabase
       .from('Delegates')
       .select('Email, Phone')
@@ -50,7 +53,7 @@ export async function POST(req: Request) {
     if (weekData.currentcount >= weekData.capacity) {
       return NextResponse.json({ error: `Week ${weekLetter} is full` }, { status: 400 });
     }
-
+    
     // --- Insert Delegate ---
    const { data: newDelegate, error: insertError } = await supabase
     .from('Delegates')
@@ -59,7 +62,7 @@ export async function POST(req: Request) {
       Email: email,
       School: school,
       Grade: grade,
-      Week: week, // ✅ directly use WeekIdentifier
+      Week: weekLetter, // ✅ directly use WeekIdentifier
       Phone: phone,
       DietaryNotes: dietaryNotes,
     })
