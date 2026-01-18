@@ -80,7 +80,7 @@ export async function POST(req: Request) {
     // --- Insert Emergency Contact ---
     if (newDelegate.id) {
       await supabase.from('EmergencyContacts').insert({
-        DelegateID: newDelegate.id,
+        DelegateID: newDelegate.DelegateID,
         Name: emergencyContactName,
         Relation: emergencyContactRelation,
         Phone: emergencyContactPhone,
