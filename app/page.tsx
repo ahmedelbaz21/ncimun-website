@@ -15,7 +15,7 @@ export default function HomePage() {
           <Link href="/register" className="btn btn-primary">
             Register Now
           </Link>
-          <Link href="/status" className="btn btn-secondary">
+       {/*    <Link href="/status" className="btn btn-secondary">
             Choose Council
           </Link>
            <Link href="/bus_route" className="btn btn-primary">
@@ -23,6 +23,9 @@ export default function HomePage() {
           </Link>
           <Link href="/Delegate-info" className="btn btn-secondary">
             View Info
+          </Link> */}
+           <Link href="/login" className="btn btn-secondary">
+            Log In
           </Link>
         </div>
       </div>

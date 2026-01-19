@@ -72,7 +72,7 @@ export async function checkStatus(
   } else {
     return {
       status: 'pending',
-      message: 'Your payment is still pending. Please check back later.',
+      message: '⚠️ Your payment is still pending. Please check back later.',
     };
   }
 }

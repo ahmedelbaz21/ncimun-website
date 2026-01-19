@@ -143,7 +143,7 @@ export default function BusesSelectionPage() {
       }
       // Payment not received
             if (delegate.PaymentStatus !== 'Received') {
-        setMessage('⚠️ Your payment must be marked as Received before selecting buses.');
+        setMessage('⚠️ Your payment is still pending. Please check back later.');
         setWeek('');
         setHasSubmitted(false);
         setLoading(false);
