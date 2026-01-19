@@ -120,7 +120,7 @@ export default function BusesSelectionPage() {
   const [message, setMessage] = useState('');
   // bus list Popup visibility state
   const [showLocations, setShowLocations] = useState(false);
-
+  console.log('loading:', loading, 'week:', week, 'hasSubmitted:', hasSubmitted, 'buses:', buses) 
 
   // Fetch delegate info
   useEffect(() => {
@@ -440,8 +440,10 @@ export default function BusesSelectionPage() {
             )}
 
             {/* Selection form */}
+            
           
             {!loading && week && !hasSubmitted && (
+              
               <>
                 <h2>Weekday Routes</h2>
 
