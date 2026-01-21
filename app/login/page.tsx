@@ -17,7 +17,7 @@ export default function SetupPage() {
           {/* Step 1 */}
           <div className="step-block">
             <h2 className="step-title">Step 1: Choose Council</h2>
-            <Link href="/councils" className="btn btn-secondary">
+            <Link href="/status" className="btn btn-secondary">
               Choose Council
             </Link>
           </div>

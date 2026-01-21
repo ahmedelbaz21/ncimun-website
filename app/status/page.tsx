@@ -2,10 +2,13 @@
 
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { checkStatus, type FormState } from '../../lib/actions';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+
   return (
     <button
       type="submit"
@@ -18,20 +21,22 @@ function SubmitButton() {
 }
 
 export default function DelegateStatusPage() {
+  const router = useRouter();
+
   const initialState: FormState = {
     status: null,
     message: null,
   };
 
+  // ✅ ONLY ONCE
   const [state, formAction] = useActionState(checkStatus, initialState);
 
-  // Add an explicit type definition for the statusStyles object
-  const statusStyles: { [key: string]: string } = {
-    success: 'status-success',
-    pending: 'status-pending',
-    error: 'status-error',
-    completed: 'status-completed',
-  };
+  // ✅ Redirect when payment is received
+  useEffect(() => {
+    if (state.status === 'success') {
+      router.push('/councils');
+    }
+  }, [state.status, router]);
 
   return (
     <main className="register-page">
@@ -45,25 +50,15 @@ export default function DelegateStatusPage() {
             <input
               type="text"
               name="delegateId"
-              placeholder="e.g., 2511001"
               required
+              placeholder="e.g., 2613001"
             />
           </label>
           <SubmitButton />
         </form>
 
         {state.status && (
-          <div className={`status-message ${statusStyles[state.status]}`}>
-            <p>{state.message}</p>
-            {state.status === 'success' && (
-              <a
-                href="/councils"
-                className="btn btn-secondary"
-              >
-                Complete Your Registration
-              </a>
-            )}
-          </div>
+          <p>{state.message}</p>
         )}
       </div>
     </main>
