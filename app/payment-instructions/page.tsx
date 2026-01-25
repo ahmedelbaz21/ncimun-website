@@ -19,7 +19,7 @@ export default function PaymentPage({
   } else if (fourthDigit === '2') {
     dueAmount = '2500 EGP';
   } */
-  const dueAmount = '3000 EGP';
+  const dueAmount = '3,300 EGP';
 
   const paymentMessage =
     'Please send the due amount to either Instapay or Telda:\n\n' +
